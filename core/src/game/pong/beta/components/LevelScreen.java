@@ -8,7 +8,7 @@ public class LevelScreen extends BaseScreen {
 
     private Paddle paddle1, paddle2;
     private Ball ball;
-    private BaseActor borderUp, borderDown;
+    private BaseActor borderUp, borderDown,endGameBorderLeft, endGameBorderRight;
 
 
     @Override

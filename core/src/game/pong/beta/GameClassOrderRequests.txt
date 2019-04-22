@@ -1,0 +1,10 @@
+=============================
+1. Game run:
+        -Pack: game.pong.beta2.desktop > DesktopLuncher.class
+                + create > LwjglApplicationConfiguration
+                + create > PongGameBeta
+
+2. PongGameBeta.class:
+                + create > MenuScreen
+
+3. MenuScreen.class:

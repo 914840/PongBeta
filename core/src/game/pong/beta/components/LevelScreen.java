@@ -27,6 +27,11 @@ public class LevelScreen extends BaseScreen {
         borderDown = new BaseActor( 0, 0, mainStage);
         borderDown.loadTexture("border1600x10.png");
 
+        endGameBorderLeft = new BaseActor( 0, 0, mainStage);
+        endGameBorderLeft.loadTexture("border2x900endGame.png");
+
+        endGameBorderRight = new BaseActor( mainStage.getWidth()-2, 0, mainStage);
+        endGameBorderRight.loadTexture("border2x900endGame.png");
 
         paddle1 = new Paddle(30, (mainStage.getHeight()/2)- 75 , mainStage, new Player("Maciek") );
         paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-75, mainStage, new Player("CPU", 0, true));
@@ -59,6 +64,15 @@ public class LevelScreen extends BaseScreen {
         if (ball.overlaps(borderDown))
         {
             ball.setMotionAngle((180 - ball.getMotionAngle()) + 180);
+        }
+        if (ball.overlaps(endGameBorderLeft))
+        {
+            //TODO obsługa wyniku i ponownego rozgrywania
+            ball.setOpacity(0);
+        }
+        if (ball.overlaps(endGameBorderRight))
+        {
+            ball.setOpacity(0);
         }
 
     }

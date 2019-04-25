@@ -8,18 +8,18 @@ import game.pong.beta.BaseActor;
 public class Paddle extends BaseActor {
 
     private Player player;
-    private float maxSpeed = 500;
+    private float maxSpeed = 700;
 
     Paddle(float x, float y, Stage s, Player player){
         super(x,y,s);
         this.player = player;
-        loadTexture("paddle.jpg");
+        loadTexture("paddle2.jpg");
 
-        setAcceleration(2*this.maxSpeed);
+        setAcceleration(100*this.maxSpeed);
         setMaxSpeed(this.maxSpeed);
-        setDeceleration(2*this.maxSpeed);
+        setDeceleration(100*this.maxSpeed);
 
-        setBoundaryPolygon(8);
+        //setBoundaryPolygon(256);
     }
 
     @Override

@@ -14,9 +14,9 @@ public class Ball extends BaseActor {
         loadTexture("ball.png");
 
 
-        setSpeed(500);
+        setSpeed(0); // 0 bo ustawiane w LevelScreen > showStartLabel
         setMotionAngle(120);
-        setBoundaryPolygon(8);
+        setBoundaryPolygon(4);
     }
 
     @Override

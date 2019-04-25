@@ -1,5 +1,9 @@
 package game.pong.beta.components;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.compression.lzma.Base;
 import game.pong.beta.BaseActor;
@@ -12,7 +16,9 @@ public class LevelScreen extends BaseScreen implements HudComponent {
     private Paddle paddle1, paddle2;
     private Ball ball;
     private BaseActor borderUp, borderDown,endGameBorderLeft, endGameBorderRight;
-    private Label scoreLabel;
+    private Label scoreLabel, spaceLabel;
+
+    private int flag = 0;
 
     @Override
     public void initialize() {
@@ -36,11 +42,17 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         endGameBorderRight = new BaseActor( mainStage.getWidth()-2, 0, mainStage);
         endGameBorderRight.loadTexture("border2x900endGame.png");
 
-        paddle1 = new Paddle(30, (mainStage.getHeight()/2)- 75 , mainStage, new Player("Maciek") );
-        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-75, mainStage, new Player("CPU", 0, true));
+        paddle1 = new Paddle(30, (mainStage.getHeight()/2)- 100 , mainStage, new Player("Maciek") );
+        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player("CPU", 0, true));
+
+
+//        spaceLabel = new Label(" PRESS  SPACE  TO  START  ",BaseGame.labelStyle );
+//        spaceLabel.setPosition((mainStage.getWidth()/2) - 200, mainStage.getHeight()/2);
+//        spaceLabel.setVisible(true);
+//        mainStage.addActor(spaceLabel);
 
         showScoreboard();
-
+        showStartLabel();
 
         // Last item od mainStage
         ball = new Ball((mainStage.getWidth()/2)-16, (mainStage.getHeight()/2)-16,mainStage);
@@ -55,15 +67,47 @@ public class LevelScreen extends BaseScreen implements HudComponent {
     public void update(float dt)
     {
         paddle2.ballTracking(ball);
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && flag == 0) {
+            ball.setSpeed(800);
+            ball.setMotionAngle(MathUtils.random(-45, 45));
+            spaceLabel.setText("");
+            flag = 1;
+        }
+
 
         if (ball.overlaps(paddle1))
         {
-
-            ball.setMotionAngle(180 - ball.getMotionAngle());
+            if (paddle1.isMoving())
+            {
+                if((paddle1.getY() + 25) < (ball.getY()-32) || paddle1.getY()+ 175 > (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(45, 60));
+                }
+                else if((paddle1.getY() + 60) < (ball.getY()-32) ||  paddle1.getY()+ 140 > (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(30, 50));
+                }
+                else if((paddle1.getY() + 60) > (ball.getY()-32) &&  paddle1.getY()+ 140 < (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(10, 30));
+                }
+            }
+            else if (!paddle1.isMoving())
+            {
+                ball.setMotionAngle(180 - ball.getMotionAngle());
+            }
         }
+
         if (ball.overlaps(paddle2))
         {
-            ball.setMotionAngle(180 - ball.getMotionAngle());
+            if (paddle2.isMoving())
+            {
+                ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(15, 60));
+            }
+            else if (!paddle2.isMoving())
+            {
+                ball.setMotionAngle(180 - ball.getMotionAngle());
+            }
         }
         if (ball.overlaps(borderUp))
         {
@@ -79,14 +123,16 @@ public class LevelScreen extends BaseScreen implements HudComponent {
             paddle2.getPlayer().setScore( paddle2.getPlayer().getScore() +1);
             upDateScoreboard();
             //ball.setOpacity(0);
-            PongGameBeta.setActiveScreen(new LevelScreen());
+            resetStartLocationLevelScreen(1); // punkt dla Player 2
+            upDateStartLabel();
         }
         if (ball.overlaps(endGameBorderRight))
         {
             paddle1.getPlayer().setScore( paddle1.getPlayer().getScore() +1);
             upDateScoreboard();
             //ball.setOpacity(0);
-            PongGameBeta.setActiveScreen(new LevelScreen());
+            resetStartLocationLevelScreen(0); // punkt dla Player 1
+            upDateStartLabel();
         }
 
 
@@ -100,17 +146,60 @@ public class LevelScreen extends BaseScreen implements HudComponent {
 
     @Override
     public void showScoreboard() {
-        scoreLabel = new Label(paddle1.getPlayer().getNick() + ": " + paddle1.getPlayer().getScore(), BaseGame.labelStyle);
+        scoreLabel = new Label(paddle1.getPlayer().getNick() + ": " + paddle1.getPlayer().getScore() + "              " +
+                "     " +paddle2.getPlayer().getNick() + ": " + paddle2.getPlayer().getScore() , BaseGame.labelStyle);
+        scoreLabel.setPosition((mainStage.getWidth()/2) - 200, mainStage.getHeight() - 50 );
+
         uiStage.addActor(scoreLabel);
 
     }
 
+
     @Override
     public void upDateScoreboard() {
-        scoreLabel.setText(paddle1.getPlayer().getNick() + ": " + paddle1.getPlayer().getScore());
+        scoreLabel.setText(paddle1.getPlayer().getNick() + ": " + paddle1.getPlayer().getScore() + "              " +
+                "     " +paddle2.getPlayer().getNick() + ": " + paddle2.getPlayer().getScore() );
     }
 
     // TODO metoda do resetowania ustawień sceny. - po dotknięciu do ściany lewej lub prawej wynik sie zmienia i
     //      resetują ustawienia piłki, paletek.
+    public void resetStartLocationLevelScreen(int i)
+    {
+        paddle1.setPosition(30, (mainStage.getHeight()/2)- 75);
+        paddle2.setPosition((mainStage.getWidth() - 60), (mainStage.getHeight()/2)-75);
+        ball.setSpeed(0);
+        flag = 0;
 
+
+        if(i==1){
+            ball.setPosition(mainStage.getWidth() - 100, (mainStage.getHeight()/2)-16);
+            ball.setMotionAngle(45);
+        }
+        if(i == 0){
+            ball.setPosition(100 , (mainStage.getHeight()/2)-16);
+            ball.setMotionAngle(135);
+        }
+
+    }
+
+    public void showStartLabel()
+    {
+        spaceLabel = new Label(" PRESS  SPACE  TO  START  ",BaseGame.labelStyle );
+        spaceLabel.setPosition((mainStage.getWidth()/2) - 200, mainStage.getHeight()/2);
+
+
+
+        uiStage.addActor(spaceLabel);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            spaceLabel.setText("");
+        }
+
+
+    }
+    public void upDateStartLabel()
+    {
+        spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+
+    }
 }

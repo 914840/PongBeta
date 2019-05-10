@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 /**
@@ -24,6 +25,7 @@ public abstract class BaseGame extends Game
 
     public static LabelStyle labelStyle; // BitmapFont + Color
     public static TextButtonStyle textButtonStyle; // NPD + BitmapFont + Color
+    public static TextFieldStyle textFieldStyle;
 
     /**
      *  Called when game is initialized; stores global reference to game object.
@@ -61,6 +63,11 @@ public abstract class BaseGame extends Game
         BitmapFont newFont = new BitmapFont( Gdx.files.internal("Banschrift.fnt"));
         labelStyle.font =  newFont;
 
+        textFieldStyle = new TextFieldStyle();
+        textFieldStyle.font = newFont;
+        textFieldStyle.fontColor = Color.BLACK;
+        textFieldStyle.background = null;
+
         textButtonStyle = new TextButtonStyle();
 
         Texture   buttonTex   = new Texture( Gdx.files.internal("button.png") );
@@ -72,6 +79,8 @@ public abstract class BaseGame extends Game
         textButtonStyle.overFontColor = Color.GRAY;
         textButtonStyle.checkedOverFontColor = Color.GRAY;
         textButtonStyle.disabledFontColor = Color.GRAY;
+
+
 
 
     }

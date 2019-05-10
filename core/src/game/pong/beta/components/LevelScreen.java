@@ -81,7 +81,12 @@ public class LevelScreen extends BaseScreen implements HudComponent {
             {
                 if((paddle1.getY() + 25) < (ball.getY()-32) || paddle1.getY()+ 175 > (ball.getY() +32))
                 {
-                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(45, 60));
+                    float a = 180 - ball.getMotionAngle() + MathUtils.random(45, 60);
+                    if (a > 80 && a < 280 )
+                    {
+                        a = MathUtils.random(50, 75);
+                    }
+                    ball.setMotionAngle(a);
                 }
                 else if((paddle1.getY() + 60) < (ball.getY()-32) ||  paddle1.getY()+ 140 > (ball.getY() +32))
                 {
@@ -102,7 +107,23 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         {
             if (paddle2.isMoving())
             {
-                ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(15, 60));
+                if((paddle1.getY() + 25) < (ball.getY()-32) || paddle1.getY()+ 175 > (ball.getY() +32))
+                {
+                    float a = 180 - ball.getMotionAngle() + MathUtils.random(45, 60);
+                    if (a > 260 && a < 100 )
+                    {
+                        a = MathUtils.random(120, 160);
+                    }
+                    ball.setMotionAngle(a);
+                }
+                else if((paddle1.getY() + 60) < (ball.getY()-32) ||  paddle1.getY()+ 140 > (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(30, 50));
+                }
+                else if((paddle1.getY() + 60) > (ball.getY()-32) &&  paddle1.getY()+ 140 < (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(10, 30));
+                }
             }
             else if (!paddle2.isMoving())
             {
@@ -111,11 +132,30 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         }
         if (ball.overlaps(borderUp))
         {
-            ball.setMotionAngle((180 - ball.getMotionAngle()) + 180);
+
+            float angle = (180 - ball.getMotionAngle()) + 180;
+            if (angle > 350){
+                ball.setMotionAngle(angle - 15);
+            }
+            else if( angle < 190 ){
+                ball.setMotionAngle(angle + 15);
+            }
+            else {
+                ball.setMotionAngle(angle);
+            }
         }
         if (ball.overlaps(borderDown))
         {
-            ball.setMotionAngle((180 - ball.getMotionAngle()) + 180);
+            float angle = (180 - ball.getMotionAngle()) + 180;
+            if (angle < 10){
+                ball.setMotionAngle(angle + 15);
+            }
+            else if( angle > 170 ){
+                ball.setMotionAngle(angle - 15);
+            }
+            else {
+                ball.setMotionAngle(angle);
+            }
         }
         if (ball.overlaps(endGameBorderLeft))
         {

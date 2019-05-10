@@ -38,20 +38,38 @@ public class MenuScreen extends BaseScreen
         /**
          *  Menu buttons
          */
-        TextButton startButton = new TextButton("Single Player", BaseGame.textButtonStyle );
-        startButton.setPosition(mainStage.getWidth()/2 - 130, (mainStage.getHeight()/2)+ 100);
+        TextButton startButton;
+        TextButton multiButton;
+        TextButton settingsButton;
+        TextButton exitButton;
+
+        if(language.equals("PL")){
+            startButton = new TextButton("  Jeden Gracz  ", BaseGame.textButtonStyle );
+            multiButton = new TextButton("  Wielu Graczy ", BaseGame.textButtonStyle);
+            settingsButton = new TextButton( "    Ustawienia    " , BaseGame.textButtonStyle);
+            exitButton = new TextButton("         Wyjscie        ", BaseGame.textButtonStyle);
+        }
+        else {
+            startButton = new TextButton("Single Player", BaseGame.textButtonStyle );
+            multiButton = new TextButton("  Multi Player  ", BaseGame.textButtonStyle);
+            settingsButton = new TextButton( "       Settings       " , BaseGame.textButtonStyle);
+            exitButton = new TextButton("            Exit              ", BaseGame.textButtonStyle);
+        }
+
+        //TextButton startButton = new TextButton("Single Player", BaseGame.textButtonStyle );
+        startButton.setPosition(mainStage.getWidth()/2 - 120, (mainStage.getHeight()/2)+ 100);
         uiStage.addActor(startButton);
 
-        TextButton multiButton = new TextButton("  Multi Player  ", BaseGame.textButtonStyle);
-        multiButton.setPosition(mainStage.getWidth()/2 - 130, (mainStage.getHeight()/2));
+        //TextButton multiButton = new TextButton("  Multi Player  ", BaseGame.textButtonStyle);
+        multiButton.setPosition(mainStage.getWidth()/2 - 120, (mainStage.getHeight()/2));
         uiStage.addActor(multiButton);
 
-        TextButton settingsButton = new TextButton( "       Settings       " , BaseGame.textButtonStyle);
-        settingsButton.setPosition( (mainStage.getWidth()/2) - 130, (mainStage.getHeight()/2) -100 );
+        //TextButton settingsButton = new TextButton( "       Settings       " , BaseGame.textButtonStyle);
+        settingsButton.setPosition( (mainStage.getWidth()/2) - 120, (mainStage.getHeight()/2) -100 );
         uiStage.addActor(settingsButton);
 
-        TextButton exitButton = new TextButton("            Exit              ", BaseGame.textButtonStyle);
-        exitButton.setPosition((mainStage.getWidth()/2) - 130, (mainStage.getHeight()/2) -200);
+        //TextButton exitButton = new TextButton("            Exit              ", BaseGame.textButtonStyle);
+        exitButton.setPosition((mainStage.getWidth()/2) - 120, (mainStage.getHeight()/2) -200);
         uiStage.addActor(exitButton);
 
 

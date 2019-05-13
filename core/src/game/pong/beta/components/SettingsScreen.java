@@ -14,6 +14,15 @@ import game.pong.beta.PongGameBeta;
 public class SettingsScreen extends BaseScreen {
 
     protected Table uiTable;
+    private ButtonGroup<TextButton> group1, group2, group3;
+    private TextButton bEN, bPL;
+    private TextButton b1s, b3s, b5s;
+    private TextButton b3p, b6p, b11p;
+    private BaseActor labelNick;
+    private BaseActor labelPoints;
+    private BaseActor labelSets;
+    private BaseActor labelLanguage;
+    private TextButton backButton;
 
     @Override
     public void initialize() {
@@ -41,19 +50,23 @@ public class SettingsScreen extends BaseScreen {
         /**
          *  Label
          */
+        group1 = new ButtonGroup<>();
+        bEN = new TextButton("EN", BaseGame.textButtonStyle);
+        group1.add(bEN);
+        bPL = new TextButton("PL", BaseGame.textButtonStyle);
+        group1.add(bPL);
 
-
-        BaseActor labelLanguage = new BaseActor( 0,0, mainStage);
-        BaseActor labelSets = new BaseActor(0,0,mainStage);
-        BaseActor labelPoints = new BaseActor(0,0,mainStage);
-        BaseActor labelNick = new BaseActor(0,0,mainStage);
-        TextButton backButton;
-        if(language.equals("PL")){
+        labelLanguage = new BaseActor( 0,0, mainStage);
+        labelSets = new BaseActor(0,0,mainStage);
+        labelPoints = new BaseActor(0,0,mainStage);
+        labelNick = new BaseActor(0,0,mainStage);
+        if(PongGameBeta.gameLanguage.equals("PL")){
             labelLanguage.loadTexture("label/Jezyk.png");
             labelSets.loadTexture("label/Sety.png");
             labelPoints.loadTexture("label/Punkty.png");
             labelNick.loadTexture("label/Nick.png");
             backButton = new TextButton(" Wstecz ", BaseGame.textButtonStyle );
+            bPL.setChecked(true);
         }
         else {
             labelLanguage.loadTexture("label/Language.png");
@@ -69,26 +82,22 @@ public class SettingsScreen extends BaseScreen {
 
         labelNick.loadTexture("label/Nick.png");
 
-        ButtonGroup<TextButton> group1 = new ButtonGroup<>();
-        TextButton bEN = new TextButton("EN", BaseGame.textButtonStyle);
-        group1.add(bEN);
-        TextButton bPL = new TextButton("PL", BaseGame.textButtonStyle);
-        group1.add(bPL);
+      // **********************
 
-        ButtonGroup<TextButton> group2 = new ButtonGroup<>();
-        TextButton b1s = new TextButton(" 1 ", BaseGame.textButtonStyle);
+        group2 = new ButtonGroup<>();
+        b1s = new TextButton(" 1 ", BaseGame.textButtonStyle);
         group2.add(b1s);
-        TextButton b3s = new TextButton(" 3 ", BaseGame.textButtonStyle);
+        b3s = new TextButton(" 3 ", BaseGame.textButtonStyle);
         group2.add(b3s);
-        TextButton b5s = new TextButton(" 5 ", BaseGame.textButtonStyle);
+        b5s = new TextButton(" 5 ", BaseGame.textButtonStyle);
         group2.add(b5s);
 
-        ButtonGroup<TextButton> group3 = new ButtonGroup<>();
-        TextButton b3p = new TextButton(" 3 ", BaseGame.textButtonStyle);
+         group3 = new ButtonGroup<>();
+        b3p = new TextButton(" 3 ", BaseGame.textButtonStyle);
         group3.add(b3p);
-        TextButton b6p = new TextButton(" 6 ", BaseGame.textButtonStyle);
+        b6p = new TextButton(" 6 ", BaseGame.textButtonStyle);
         group3.add(b6p);
-        TextButton b11p = new TextButton(" 11 ", BaseGame.textButtonStyle);
+        b11p = new TextButton(" 11 ", BaseGame.textButtonStyle);
         group3.add(b11p);
 
         TextField textField = new TextField("Player",BaseGame.textFieldStyle);
@@ -131,8 +140,19 @@ public class SettingsScreen extends BaseScreen {
                             !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
                         return false;
 
-                    language = "PL";
-                    bPL.isChecked();
+                    PongGameBeta.gameLanguage = "PL";
+                    //PongGameBeta.setActiveScreen(new SettingsScreen());
+                    return true;
+                }
+        );
+
+        bEN.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+
+                    PongGameBeta.gameLanguage = "EN";
                     //PongGameBeta.setActiveScreen(new SettingsScreen());
                     return true;
                 }
@@ -164,6 +184,20 @@ public class SettingsScreen extends BaseScreen {
 
     @Override
     public void update(float dt) {
-
+        if(PongGameBeta.gameLanguage.equals("PL")){
+            labelLanguage.loadTexture("label/Jezyk.png");
+            labelSets.loadTexture("label/Sety.png");
+            labelPoints.loadTexture("label/Punkty.png");
+            labelNick.loadTexture("label/Nick.png");
+            backButton = new TextButton(" Wstecz ", BaseGame.textButtonStyle );
+            bPL.setChecked(true);
+        }
+        else {
+            labelLanguage.loadTexture("label/Language.png");
+            labelSets.loadTexture("label/Sets.png");
+            labelPoints.loadTexture("label/Points.png");
+            labelNick.loadTexture("label/Nick.png");
+            backButton = new TextButton(" Back ", BaseGame.textButtonStyle );
+        }
     }
 }

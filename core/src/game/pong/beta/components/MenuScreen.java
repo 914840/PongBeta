@@ -18,6 +18,11 @@ import game.pong.beta.PongGameBeta;
 
 public class MenuScreen extends BaseScreen
 {
+    private TextButton startButton;
+    private TextButton multiButton;
+    private TextButton settingsButton;
+    private TextButton exitButton;
+
     @Override
     public void initialize()
     {
@@ -38,12 +43,9 @@ public class MenuScreen extends BaseScreen
         /**
          *  Menu buttons
          */
-        TextButton startButton;
-        TextButton multiButton;
-        TextButton settingsButton;
-        TextButton exitButton;
 
-        if(language.equals("PL")){
+
+        if(PongGameBeta.gameLanguage.equals("PL")){
             startButton = new TextButton("  Jeden Gracz  ", BaseGame.textButtonStyle );
             multiButton = new TextButton("  Wielu Graczy ", BaseGame.textButtonStyle);
             settingsButton = new TextButton( "    Ustawienia    " , BaseGame.textButtonStyle);
@@ -121,6 +123,17 @@ public class MenuScreen extends BaseScreen
     @Override
     public void update(float dt)
     {
-        //TODO
+        if(PongGameBeta.gameLanguage.equals("PL")){
+            startButton = new TextButton("  Jeden Gracz  ", BaseGame.textButtonStyle );
+            multiButton = new TextButton("  Wielu Graczy ", BaseGame.textButtonStyle);
+            settingsButton = new TextButton( "    Ustawienia    " , BaseGame.textButtonStyle);
+            exitButton = new TextButton("         Wyjscie        ", BaseGame.textButtonStyle);
+        }
+        else {
+            startButton = new TextButton("Single Player", BaseGame.textButtonStyle );
+            multiButton = new TextButton("  Multi Player  ", BaseGame.textButtonStyle);
+            settingsButton = new TextButton( "       Settings       " , BaseGame.textButtonStyle);
+            exitButton = new TextButton("            Exit              ", BaseGame.textButtonStyle);
+        }
     }
 }

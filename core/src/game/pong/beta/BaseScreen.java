@@ -14,13 +14,11 @@ public abstract class BaseScreen implements Screen, InputProcessor
 {
     protected Stage mainStage;
     protected Stage uiStage;
-    protected String language;
 
     public BaseScreen()
     {
         mainStage = new Stage();
         uiStage = new Stage();
-        language = "EN";
         initialize();
     }
 

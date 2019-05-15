@@ -15,7 +15,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
 
     private Paddle paddle1, paddle2;
     private Ball ball;
-    private BaseActor borderUp, borderDown,endGameBorderLeft, endGameBorderRight;
+    private BaseActor borderUp, borderDown,endGameBorderLeft, endGameBorderRight, winMessage, gameOverMessage;
     private Label scoreLabel, spaceLabel;
 
     private int flag = 0;
@@ -42,8 +42,8 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         endGameBorderRight = new BaseActor( mainStage.getWidth()-2, 0, mainStage);
         endGameBorderRight.loadTexture("border2x900endGame.png");
 
-        paddle1 = new Paddle(30, (mainStage.getHeight()/2)- 100 , mainStage, new Player("Maciek") );
-        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player("CPU", 0, true));
+        paddle1 = new Paddle(30, (mainStage.getHeight()/2)- 100 , mainStage, new Player(PongGameBeta.nick) );
+        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player("CPU", true));
 
 
 //        spaceLabel = new Label(" PRESS  SPACE  TO  START  ",BaseGame.labelStyle );
@@ -67,14 +67,21 @@ public class LevelScreen extends BaseScreen implements HudComponent {
     public void update(float dt)
     {
         paddle2.ballTracking(ball);
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && flag == 0) {
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0)) {
             ball.setSpeed(800);
             ball.setMotionAngle(MathUtils.random(-45, 45));
             spaceLabel.setText("");
             flag = 1;
         }
+        else if((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 99))
+        {
+            PongGameBeta.setActiveScreen( new MenuScreen());
+        }
 
 
+        /**
+         *  bounced ball from paddle1  - Player
+         */
         if (ball.overlaps(paddle1))
         {
             if (paddle1.isMoving())
@@ -103,6 +110,9 @@ public class LevelScreen extends BaseScreen implements HudComponent {
             }
         }
 
+        /**
+         *  bounced ball from paddle2  - CPU
+         */
         if (ball.overlaps(paddle2))
         {
             if (paddle2.isMoving())
@@ -130,6 +140,10 @@ public class LevelScreen extends BaseScreen implements HudComponent {
                 ball.setMotionAngle(180 - ball.getMotionAngle());
             }
         }
+
+        /**
+         *  bounced ball from UP border
+         */
         if (ball.overlaps(borderUp))
         {
 
@@ -144,6 +158,10 @@ public class LevelScreen extends BaseScreen implements HudComponent {
                 ball.setMotionAngle(angle);
             }
         }
+
+        /**
+         *  bounced ball from UP border
+         */
         if (ball.overlaps(borderDown))
         {
             float angle = (180 - ball.getMotionAngle()) + 180;
@@ -157,22 +175,63 @@ public class LevelScreen extends BaseScreen implements HudComponent {
                 ball.setMotionAngle(angle);
             }
         }
+
+        /**
+         *  ball cross left border
+         */
         if (ball.overlaps(endGameBorderLeft))
         {
-            //TODO obsługa wyniku i ponownego rozgrywania
-            paddle2.getPlayer().setScore( paddle2.getPlayer().getScore() +1);
-            upDateScoreboard();
-            //ball.setOpacity(0);
-            resetStartLocationLevelScreen(1); // punkt dla Player 2
-            upDateStartLabel();
+
+            setFlag( paddle2.getPlayer().getScore().addOnePoint() );
+
+
+//            int points = paddle2.getPlayer().getScore().getPoints();
+//            paddle2.getPlayer().getScore().setPoints( points +1);
+//
+//            /**
+//             *  if only 1 set is played
+//             */
+//            if(paddle2.getPlayer().getScore().getPoints() == PongGameBeta.points && PongGameBeta.sets == 1)  // warunek wygranej partii.
+//            {
+//                setFlag(99); // flag 99 - game ends after press space
+//                gameOverMessage = new BaseActor( (mainStage.getWidth()/2) - 265, mainStage.getHeight()/2, mainStage);
+//                gameOverMessage.loadTexture("game-over.png");
+//
+//            }
+//
+//            /**
+//             *  if more then 1 set ane less then last one.
+//             */
+//            else if( ((paddle2.getPlayer().getScore().getPoints()) == PongGameBeta.points ) && (PongGameBeta.sets > paddle2.getPlayer().getScore().getSets()))
+//            {
+//                paddle2.getPlayer().getScore().setSets(paddle1.getPlayer().getScore().getSets() + 1);
+//                paddle2.getPlayer().getScore().setPoints(0);
+//                paddle1.getPlayer().getScore().setPoints(0);
+//            }
+//
+//
+//           //else if( ((paddle2.getPlayer().getScore().getPoints()) == PongGameBeta.points ) && (PongGameBeta.sets = paddle2.getPlayer().getScore().getSets()))
+//            else
+//            {
+                upDateScoreboard();
+                resetStartLocationLevelScreen(1); // punkt dla Player 2
+                upDateStartLabel();
+//            }
+
         }
+
+        /**
+         *  ball cross right border
+         */
         if (ball.overlaps(endGameBorderRight))
         {
-            paddle1.getPlayer().setScore( paddle1.getPlayer().getScore() +1);
-            upDateScoreboard();
-            //ball.setOpacity(0);
-            resetStartLocationLevelScreen(0); // punkt dla Player 1
-            upDateStartLabel();
+            setFlag( paddle1.getPlayer().getScore().addOnePoint() );
+
+
+                upDateScoreboard();
+                resetStartLocationLevelScreen(0); // punkt dla Player 1
+                upDateStartLabel();
+
         }
 
 
@@ -186,9 +245,20 @@ public class LevelScreen extends BaseScreen implements HudComponent {
 
     @Override
     public void showScoreboard() {
-        scoreLabel = new Label(paddle1.getPlayer().getNick() + ": " + paddle1.getPlayer().getScore() + "              " +
-                "     " +paddle2.getPlayer().getNick() + ": " + paddle2.getPlayer().getScore() , BaseGame.labelStyle);
-        scoreLabel.setPosition((mainStage.getWidth()/2) - 200, mainStage.getHeight() - 50 );
+        scoreLabel = new Label(paddle1.getPlayer().getNick() +
+                "    " +
+                paddle1.getPlayer().getScore().getPoints() +
+                "          " +
+                paddle1.getPlayer().getScore().getSets() +
+                "   " +
+                "(" + PongGameBeta.sets + ")" +
+                "   " +
+                paddle2.getPlayer().getScore().getSets() +
+                "          " +
+                paddle2.getPlayer().getScore().getPoints() +
+                "    " +
+                paddle2.getPlayer().getNick(), BaseGame.labelStyle);
+        scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
 
         uiStage.addActor(scoreLabel);
 
@@ -196,9 +266,20 @@ public class LevelScreen extends BaseScreen implements HudComponent {
 
 
     @Override
+
+    //TODO poprawić scoreboard jak w showScoreBoard - bez wyśfietlania nicków.
     public void upDateScoreboard() {
-        scoreLabel.setText(paddle1.getPlayer().getNick() + ": " + paddle1.getPlayer().getScore() + "              " +
-                "     " +paddle2.getPlayer().getNick() + ": " + paddle2.getPlayer().getScore() );
+        scoreLabel.setText("                       " +
+                paddle1.getPlayer().getScore().getPoints() +
+                "          " +
+                paddle1.getPlayer().getScore().getSets() +
+                "   " +
+                "(" + PongGameBeta.sets + ")" +
+                "   " +
+                paddle2.getPlayer().getScore().getSets() +
+                "          " +
+                paddle2.getPlayer().getScore().getPoints()
+        );
     }
 
     // TODO metoda do resetowania ustawień sceny. - po dotknięciu do ściany lewej lub prawej wynik sie zmienia i
@@ -208,7 +289,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         paddle1.setPosition(30, (mainStage.getHeight()/2)- 75);
         paddle2.setPosition((mainStage.getWidth() - 60), (mainStage.getHeight()/2)-75);
         ball.setSpeed(0);
-        flag = 0;
+        //flag = 0;
 
 
         if(i==1){
@@ -222,9 +303,12 @@ public class LevelScreen extends BaseScreen implements HudComponent {
 
     }
 
-    public void showStartLabel()
-    {
-        spaceLabel = new Label(" PRESS  SPACE  TO  START  ",BaseGame.labelStyle );
+    public void showStartLabel() {
+        if (PongGameBeta.gameLanguage.equals("PL")) {
+            spaceLabel = new Label(" NACISNIJ SPACJE ABY ZACZAC ", BaseGame.labelStyle);
+        } else {
+            spaceLabel = new Label(" PRESS  SPACE  TO  START  ", BaseGame.labelStyle);
+        }
         spaceLabel.setPosition((mainStage.getWidth()/2) - 200, mainStage.getHeight()/2);
 
 
@@ -239,7 +323,20 @@ public class LevelScreen extends BaseScreen implements HudComponent {
     }
     public void upDateStartLabel()
     {
-        spaceLabel.setText(" PRESS  SPACE  TO  START  ");
-
+        if(PongGameBeta.gameLanguage.equals("PL"))
+        {
+            spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+        }
+        else
+        {
+            //spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+            spaceLabel.setText(flag);
+        }
     }
+
+    public void setFlag(int flag)
+    {
+        this.flag = flag;
+    }
+
 }

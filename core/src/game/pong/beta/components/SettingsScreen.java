@@ -92,6 +92,7 @@ public class SettingsScreen extends BaseScreen {
         b5s = new TextButton(" 5 ", BaseGame.textButtonStyle);
         group2.add(b5s);
 
+
          group3 = new ButtonGroup<>();
         b3p = new TextButton(" 3 ", BaseGame.textButtonStyle);
         group3.add(b3p);
@@ -100,7 +101,27 @@ public class SettingsScreen extends BaseScreen {
         b11p = new TextButton(" 11 ", BaseGame.textButtonStyle);
         group3.add(b11p);
 
-        TextField textField = new TextField("Player",BaseGame.textFieldStyle);
+        if(PongGameBeta.sets == 3)
+        {
+            b3s.setChecked(true);
+        }
+        else if( PongGameBeta.sets == 5)
+        {
+            b5s.setChecked(true);
+        }
+        if( PongGameBeta.points == 6)
+        {
+            b6p.setChecked(true);
+        }
+        else if( PongGameBeta.points == 11)
+        {
+            b11p.setChecked(true);
+        }
+
+
+
+
+        TextField textField = new TextField( PongGameBeta.nick , BaseGame.textFieldStyle );
 
 
         uiStage.addActor(uiTable);
@@ -158,6 +179,72 @@ public class SettingsScreen extends BaseScreen {
                 }
         );
 
+        b1s.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+
+                    PongGameBeta.sets = 1;
+                    return true;
+                }
+        );
+
+        b3s.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+
+                    PongGameBeta.sets = 3;
+                    return true;
+                }
+        );
+
+        b5s.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+
+                    PongGameBeta.sets = 5;
+                    return true;
+                }
+        );
+
+        b3p.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+
+                    PongGameBeta.points = 3;
+                    return true;
+                }
+        );
+
+        b6p.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+
+                    PongGameBeta.points = 6;
+                    return true;
+                }
+        );
+
+        b11p.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+
+                    PongGameBeta.points = 11;
+                    return true;
+                }
+        );
+
         textField.addListener(
                 e -> {
                     if(!(e instanceof InputEvent) ||
@@ -176,6 +263,7 @@ public class SettingsScreen extends BaseScreen {
                     !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
                         return false;
 
+                    PongGameBeta.nick = textField.getText();
                     PongGameBeta.setActiveScreen(new MenuScreen());
                     return false;
                 }

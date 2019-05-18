@@ -13,6 +13,8 @@ import game.pong.beta.PongGameBeta;
 
 public class SettingsScreen extends BaseScreen {
 
+    private BaseActor background;
+
     protected Table uiTable;
     private ButtonGroup<TextButton> group1, group2, group3;
     private TextButton bEN, bPL;
@@ -31,9 +33,8 @@ public class SettingsScreen extends BaseScreen {
         uiTable.setFillParent(true);
 
 
-        BaseActor background = new BaseActor(0,0,mainStage);
-        background.loadTexture("abstract1600x900.jpg");
-        background.setSize(mainStage.getWidth(), mainStage.getHeight());
+        background = setBackground();
+
 
         BaseActor title = new BaseActor(0,0,mainStage);
         title.loadTexture("settings.png");
@@ -60,7 +61,8 @@ public class SettingsScreen extends BaseScreen {
         labelSets = new BaseActor(0,0,mainStage);
         labelPoints = new BaseActor(0,0,mainStage);
         labelNick = new BaseActor(0,0,mainStage);
-        if(PongGameBeta.gameLanguage.equals("PL")){
+        if(PongGameBeta.gameLanguage.equals("PL"))
+        {
             labelLanguage.loadTexture("label/Jezyk.png");
             labelSets.loadTexture("label/Sety.png");
             labelPoints.loadTexture("label/Punkty.png");
@@ -68,7 +70,8 @@ public class SettingsScreen extends BaseScreen {
             backButton = new TextButton(" Wstecz ", BaseGame.textButtonStyle );
             bPL.setChecked(true);
         }
-        else {
+        else
+        {
             labelLanguage.loadTexture("label/Language.png");
             labelSets.loadTexture("label/Sets.png");
             labelPoints.loadTexture("label/Points.png");
@@ -76,11 +79,11 @@ public class SettingsScreen extends BaseScreen {
             backButton = new TextButton(" Back ", BaseGame.textButtonStyle );
         }
 
-        labelSets.loadTexture("label/Sets.png");
-
-        labelPoints.loadTexture("label/Points.png");
-
-        labelNick.loadTexture("label/Nick.png");
+//        labelSets.loadTexture("label/Sets.png");
+//
+//        labelPoints.loadTexture("label/Points.png");
+//
+//        labelNick.loadTexture("label/Nick.png");
 
       // **********************
 

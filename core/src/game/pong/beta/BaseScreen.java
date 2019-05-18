@@ -5,7 +5,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.io.File;
 import java.util.Scanner;
@@ -106,4 +110,46 @@ public abstract class BaseScreen implements Screen, InputProcessor
 
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {  return false;  }
+
+    /*****************************************************
+     * Metody własne
+     */
+
+    /**
+     * this method sets background for screen
+     * @return BaseActor background
+     */
+    public BaseActor setBackground() {
+        BaseActor background = new BaseActor(0, 0, mainStage);
+        background.loadTexture("abstract1600x900.jpg");
+        background.setSize(mainStage.getWidth(), mainStage.getHeight());
+        return background;
+    }
+
+    /**
+     * this method load texture of title from fileName - png file.
+     * @param fileName name of file.png
+     * @return BaseActor title
+     */
+    public BaseActor setTitle(String fileName)
+    {
+        BaseActor title = new BaseActor(0,0,mainStage);
+        title.loadTexture(fileName);
+        title.centerAtPosition(mainStage.getWidth()/2 + 25, mainStage.getHeight()- 100);
+        return title;
+    }
+
+    /**
+     * Called when screen have Buttons to initialize buttonStyle, buttonTexture, TextureRegion
+     * @param fileName name of file.png
+     */
+    public void setButtonStyleTexture(String fileName)
+    {
+        Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
+
+        Texture buttonTex = new Texture(Gdx.files.internal(fileName) );
+        TextureRegion buttonRegion = new TextureRegion(buttonTex);
+        buttonStyle.up = new TextureRegionDrawable( buttonRegion );
+    }
+
 }

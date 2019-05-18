@@ -18,6 +18,9 @@ import game.pong.beta.PongGameBeta;
 
 public class MenuScreen extends BaseScreen
 {
+    private BaseActor background;
+    private BaseActor title;
+
     private TextButton startButton;
     private TextButton multiButton;
     private TextButton settingsButton;
@@ -26,19 +29,10 @@ public class MenuScreen extends BaseScreen
     @Override
     public void initialize()
     {
-        BaseActor background = new BaseActor(0,0,mainStage);
-        background.loadTexture("abstract1600x900.jpg");
-        background.setSize(mainStage.getWidth(), mainStage.getHeight());
+        background = setBackground();
+        title = setTitle("pong.png");
 
-        BaseActor title = new BaseActor(0,0,mainStage);
-        title.loadTexture("Pong.png");
-        title.centerAtPosition(mainStage.getWidth()/2, mainStage.getHeight()- 100);
-
-        ButtonStyle buttonStyle = new ButtonStyle();
-
-        Texture buttonTex = new Texture(Gdx.files.internal("button.png") );
-        TextureRegion buttonRegion = new TextureRegion(buttonTex);
-        buttonStyle.up = new TextureRegionDrawable( buttonRegion );
+        setButtonStyleTexture("button.png");
 
         /**
          *  Menu buttons
@@ -123,17 +117,6 @@ public class MenuScreen extends BaseScreen
     @Override
     public void update(float dt)
     {
-        if(PongGameBeta.gameLanguage.equals("PL")){
-            startButton = new TextButton("  Jeden Gracz  ", BaseGame.textButtonStyle );
-            multiButton = new TextButton("  Wielu Graczy ", BaseGame.textButtonStyle);
-            settingsButton = new TextButton( "    Ustawienia    " , BaseGame.textButtonStyle);
-            exitButton = new TextButton("         Wyjscie        ", BaseGame.textButtonStyle);
-        }
-        else {
-            startButton = new TextButton("Single Player", BaseGame.textButtonStyle );
-            multiButton = new TextButton("  Multi Player  ", BaseGame.textButtonStyle);
-            settingsButton = new TextButton( "       Settings       " , BaseGame.textButtonStyle);
-            exitButton = new TextButton("            Exit              ", BaseGame.textButtonStyle);
-        }
+
     }
 }

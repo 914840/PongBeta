@@ -13,6 +13,7 @@ import game.pong.beta.PongGameBeta;
 
 public class LevelScreen extends BaseScreen implements HudComponent {
 
+    private BaseActor background;
     private Paddle paddle1, paddle2;
     private Ball ball;
     private BaseActor borderUp, borderDown,endGameBorderLeft, endGameBorderRight, winMessage, gameOverMessage;
@@ -24,9 +25,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
     public void initialize() {
 
 
-        BaseActor background = new BaseActor(0,0,mainStage);
-        background.loadTexture("abstract1600x900.jpg");
-        background.setSize(mainStage.getWidth(), mainStage.getHeight());
+        background = setBackground();
 
         BaseActor.setWorldBounds(background);
 

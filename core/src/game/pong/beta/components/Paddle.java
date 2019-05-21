@@ -46,12 +46,12 @@ public class Paddle extends BaseActor {
         float By = ball.getY();
         float Px =  this.getX();
         float Py = this.getY() + 75;
-        if(Py < By){
-            this.moveBy(0,6);
+        if(Py + 10 < By){
+            this.moveBy(0,7);
             return;
         }
-        if(Py >= By){
-            this.moveBy(0,-6);
+        if(Py - 10 >= By){
+            this.moveBy(0,-7);
             return;
         }
 

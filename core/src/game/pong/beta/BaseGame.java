@@ -27,6 +27,7 @@ public abstract class BaseGame extends Game
     public static TextButtonStyle textButtonStyle; // NPD + BitmapFont + Color
     public static TextFieldStyle textFieldStyle;
 
+
     /**
      *  Called when game is initialized; stores global reference to game object.
      */

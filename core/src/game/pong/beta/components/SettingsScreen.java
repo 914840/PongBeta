@@ -254,7 +254,7 @@ public class SettingsScreen extends BaseScreen {
                             !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
                         return false;
 
-                    textField.setText(" ");
+                    textField.setText("");
                     return true;
 
                 }

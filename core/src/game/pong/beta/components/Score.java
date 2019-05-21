@@ -37,6 +37,17 @@ public class Score {
             this.points = 0;
              code = addOneSet();
         }
+        else if(this.points == PongGameBeta.points - 1)
+        {
+            if(PongGameBeta.sets - 1 == this.sets)
+            {
+                code = 9;   // match point
+            }
+            else
+            {
+                code = 2;   // set point
+            }
+        }
         else
         {
              code = 0;
@@ -51,7 +62,8 @@ public class Score {
             return 99;          // kod konca rozgrywki.
         }
         else {
-            return 0;
+            return 5;           // kod resetu punktów u drugiego gracza
+                                // nowy set
         }
     }
 }

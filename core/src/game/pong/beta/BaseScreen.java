@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.io.File;
@@ -146,6 +147,7 @@ public abstract class BaseScreen implements Screen, InputProcessor
     public void setButtonStyleTexture(String fileName)
     {
         Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
 
         Texture buttonTex = new Texture(Gdx.files.internal(fileName) );
         TextureRegion buttonRegion = new TextureRegion(buttonTex);

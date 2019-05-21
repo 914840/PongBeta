@@ -5,7 +5,6 @@ package game.pong.beta.components;
  * docelowo ma też służyć do wyświetlania pozostałych elementów HUD
  * tzn:
  * - przycisk pausa
- * - przycisk powrót/ koniec
  * - scoreboard ( set/points )
  */
 

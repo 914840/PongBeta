@@ -1,19 +1,17 @@
 package game.pong.beta.components;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
-
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import game.pong.beta.UDP.UDPClient;
+import game.pong.beta.network.ServerSocketPong;
+import game.pong.beta.UDP.UDPServer;
+import java.net.*;
 
 public class LobbyScreen extends BaseScreen {
 
@@ -25,6 +23,8 @@ public class LobbyScreen extends BaseScreen {
     private TextButton joinButton, createButton, backButton;
     private TextField ipAdress, nickText;
     private Label ip, nick, rules;
+
+    private ServerSocketPong serverSocketPong;
     private InetAddress IP;
 
     @Override
@@ -80,6 +80,7 @@ public class LobbyScreen extends BaseScreen {
 
         uiStage.addActor(uiTable);
 
+
         nickText.addListener(
                 e -> {
                     if(!(e instanceof InputEvent) ||
@@ -101,6 +102,16 @@ public class LobbyScreen extends BaseScreen {
                     PongGameBeta.nick = nickText.getText();
                     // TODO reszta metody
                     //*****************************
+                    // tworzy gniazdo servera
+//                    serverSocketPong = new ServerSocketPong();
+
+                    try {
+                        UDPServer server = new UDPServer(IP.toString(), 8100);
+                    } catch (SocketException ex) {
+                        ex.printStackTrace();
+                    }
+
+
                     return true;
                 }
         );
@@ -112,8 +123,7 @@ public class LobbyScreen extends BaseScreen {
                         return false;
 
                     PongGameBeta.nick = nickText.getText();
-                    // TODO reszta metody
-                    //***************************
+                    UDPClient client = new UDPClient(ipAdress.getText(), 8100);
                     return true;
                 }
         );

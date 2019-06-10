@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 /**
@@ -26,6 +28,7 @@ public abstract class BaseGame extends Game
     public static LabelStyle labelStyle; // BitmapFont + Color
     public static TextButtonStyle textButtonStyle; // NPD + BitmapFont + Color
     public static TextFieldStyle textFieldStyle;
+    public static List.ListStyle lisatStyle;
 
 
     /**
@@ -80,6 +83,23 @@ public abstract class BaseGame extends Game
         textButtonStyle.overFontColor = Color.GRAY;
         textButtonStyle.checkedOverFontColor = Color.GRAY;
         textButtonStyle.disabledFontColor = Color.GRAY;
+
+
+        List.ListStyle listStyle = new List.ListStyle();
+        listStyle.background = new NinePatchDrawable(
+                new NinePatch
+                (
+                        new Texture(Gdx.files.internal("button.png")),
+                        10,
+                        10 ,
+                        10,
+                        10
+                )
+        );
+
+        listStyle.font = newFont;
+        listStyle.fontColorUnselected = Color.BLACK;
+        listStyle.fontColorSelected = Color.GOLD;
 
 
 

@@ -27,7 +27,8 @@ public class LobbyScreen extends BaseScreen {
     private Label ip, nick, rules;
     private Label waiting;
 
-    private ServerSocketPong serverSocketPong;
+    private UDPServer server;
+    private UDPClient client;
     private InetAddress IP;
 
     @Override
@@ -118,7 +119,6 @@ public class LobbyScreen extends BaseScreen {
                         return false;
 
                     PongGameBeta.nick = nickText.getText();
-                    UDPServer server;
                     try {
                         server = new UDPServer(IP.toString(), 8111);
                     } catch (SocketException ex) {
@@ -132,6 +132,9 @@ public class LobbyScreen extends BaseScreen {
                     flagActiveNickText.set(false);
                     joinButton.setDisabled(true);
                     mainStage.addActor(waiting);
+
+                    server.recieveRequest();
+                    server.sendResponse("OK-server");
 
                     return true;
                 }
@@ -151,12 +154,10 @@ public class LobbyScreen extends BaseScreen {
 
 
                     PongGameBeta.nick = nickText.getText();
-                    UDPClient client = new UDPClient(ipAdress.getText(), 8111);
+                    client = new UDPClient(ipAdress.getText(), 8111);
+
                     String message = client.send("pong");
-                    if(message.equals("pong")){
-                        waiting.setText("new game");
-                        client.sendOnly("new game");
-                    }
+
 
                     return true;
                 }

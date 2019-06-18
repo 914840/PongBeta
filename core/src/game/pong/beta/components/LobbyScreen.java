@@ -8,9 +8,9 @@ import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
-import game.pong.beta.UDP.UDPClient;
-import game.pong.beta.network.ServerSocketPong;
-import game.pong.beta.UDP.UDPServer;
+//import game.pong.beta.UDP.UDPClient;
+////import game.pong.beta.network.ServerSocketPong;
+//import game.pong.beta.UDP.UDPServer;
 import java.net.*;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,8 +27,8 @@ public class LobbyScreen extends BaseScreen {
     private Label ip, nick, rules;
     private Label waiting;
 
-    private UDPServer server;
-    private UDPClient client;
+//    private UDPServer server;
+//    private UDPClient client;
     private InetAddress IP;
 
     @Override
@@ -119,11 +119,7 @@ public class LobbyScreen extends BaseScreen {
                         return false;
 
                     PongGameBeta.nick = nickText.getText();
-                    try {
-                        server = new UDPServer(IP.toString(), 8111);
-                    } catch (SocketException ex) {
-                        ex.printStackTrace();
-                    }
+                    //                        server = new UDPServer(IP.toString(), 8111);
 
                     waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
                     ipAdress.setDisabled(true);
@@ -133,8 +129,8 @@ public class LobbyScreen extends BaseScreen {
                     joinButton.setDisabled(true);
                     mainStage.addActor(waiting);
 
-                    server.recieveRequest();
-                    server.sendResponse("OK-server");
+//                    server.recieveRequest();
+//                    server.sendResponse("OK-server");
 
                     return true;
                 }
@@ -154,9 +150,9 @@ public class LobbyScreen extends BaseScreen {
 
 
                     PongGameBeta.nick = nickText.getText();
-                    client = new UDPClient(ipAdress.getText(), 8111);
-
-                    String message = client.send("pong");
+//                    client = new UDPClient(ipAdress.getText(), 8111);
+//
+//                    String message = client.send("pong");
 
 
                     return true;

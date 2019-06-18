@@ -12,6 +12,8 @@ import game.pong.beta.UDP.UDPClient;
 import game.pong.beta.network.ServerSocketPong;
 import game.pong.beta.UDP.UDPServer;
 import java.net.*;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LobbyScreen extends BaseScreen {
 
@@ -23,6 +25,7 @@ public class LobbyScreen extends BaseScreen {
     private TextButton joinButton, createButton, backButton;
     private TextField ipAdress, nickText;
     private Label ip, nick, rules;
+    private Label waiting;
 
     private ServerSocketPong serverSocketPong;
     private InetAddress IP;
@@ -44,6 +47,7 @@ public class LobbyScreen extends BaseScreen {
             createButton = new TextButton("    Stworz    ", BaseGame.textButtonStyle);
             backButton = new TextButton(" Wstecz ", BaseGame.textButtonStyle );
             ip = new Label("Adres IP:", BaseGame.labelStyle);
+            waiting = new Label( " OCZEKIWANIE NA GRACZA ", BaseGame.labelStyle);
         }
         else
         {
@@ -51,6 +55,7 @@ public class LobbyScreen extends BaseScreen {
             createButton = new TextButton("    Create    ", BaseGame.textButtonStyle);
             backButton = new TextButton("  Back  ", BaseGame.textButtonStyle );
             ip = new Label("IP adress: ", BaseGame.labelStyle);
+            waiting = new Label(" WAITING FOR THE PLAYER ", BaseGame.labelStyle);
         }
 
         try {
@@ -80,16 +85,29 @@ public class LobbyScreen extends BaseScreen {
 
         uiStage.addActor(uiTable);
 
-
+        AtomicBoolean flagActiveNickText = new AtomicBoolean(true);
         nickText.addListener(
                 e -> {
                     if(!(e instanceof InputEvent) ||
                             !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
                         return false;
-
-                    nickText.setText("");
+                    if(flagActiveNickText.get()) {
+                        nickText.setText("");
+                    }
                     return true;
 
+                }
+        );
+        AtomicBoolean flagActiveIpAdress = new AtomicBoolean(true);
+        ipAdress.addListener(
+                e -> {
+                    if(!(e instanceof InputEvent) ||
+                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                        return false;
+                    if(flagActiveIpAdress.get()) {
+                        ipAdress.setText("");
+                    }
+                    return true;
                 }
         );
 
@@ -100,17 +118,20 @@ public class LobbyScreen extends BaseScreen {
                         return false;
 
                     PongGameBeta.nick = nickText.getText();
-                    // TODO reszta metody
-                    //*****************************
-                    // tworzy gniazdo servera
-//                    serverSocketPong = new ServerSocketPong();
-
+                    UDPServer server;
                     try {
-                        UDPServer server = new UDPServer(IP.toString(), 8100);
+                        server = new UDPServer(IP.toString(), 8111);
                     } catch (SocketException ex) {
                         ex.printStackTrace();
                     }
 
+                    waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
+                    ipAdress.setDisabled(true);
+                    flagActiveIpAdress.set(false);
+                    nickText.setDisabled(true);
+                    flagActiveNickText.set(false);
+                    joinButton.setDisabled(true);
+                    mainStage.addActor(waiting);
 
                     return true;
                 }
@@ -122,8 +143,21 @@ public class LobbyScreen extends BaseScreen {
                             !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
                         return false;
 
+                    ipAdress.setDisabled(true);
+                    flagActiveIpAdress.set(false);
+                    nickText.setDisabled(true);
+                    flagActiveNickText.set(false);
+                    createButton.setDisabled(true);
+
+
                     PongGameBeta.nick = nickText.getText();
-                    UDPClient client = new UDPClient(ipAdress.getText(), 8100);
+                    UDPClient client = new UDPClient(ipAdress.getText(), 8111);
+                    String message = client.send("pong");
+                    if(message.equals("pong")){
+                        waiting.setText("new game");
+                        client.sendOnly("new game");
+                    }
+
                     return true;
                 }
         );

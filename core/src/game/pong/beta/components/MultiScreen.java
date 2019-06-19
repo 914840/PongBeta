@@ -110,6 +110,10 @@ public class MultiScreen extends BaseScreen {
                         connection.sendTCP(response);
                         waiting.setVisible(false);
                     }
+                    if  (object instanceof PaddleDirection) {
+                        PaddleDirection direction = (PaddleDirection) object;
+                        paddle2.accelerateWithoutRotation(direction.y);
+                    }
                 }
             });
         }
@@ -117,7 +121,7 @@ public class MultiScreen extends BaseScreen {
             client = new Client();
             client.start();
             try {
-                client.connect(5000, ipHost, tcpPort, udpPort);
+                client.connect(5000, "192.168.8.101", 54345, 54789);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -141,6 +145,10 @@ public class MultiScreen extends BaseScreen {
                         SomeResponse response = (SomeResponse)object;
                         System.out.println(response.text);
                     }
+                    if (object instanceof PaddleDirection) {
+                        PaddleDirection direction = (PaddleDirection) object;
+                        paddle1.accelerateWithoutRotation(direction.y);
+                    }
                 }
             });
         }
@@ -149,18 +157,20 @@ public class MultiScreen extends BaseScreen {
     }
     @Override
     public void update(float dt) {
-        if(client.getUpdateThread().isAlive()){
-            System.out.println("alive");
-        };
+//        if(client.getUpdateThread().isAlive()){
+//            System.out.println("Alive");
+//        }
+
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
             direction.y = 1;
-
+            server.sendToAllTCP(direction);
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             direction.y = -1;
+            server.sendToAllTCP(direction);
         }
-        server.sendToAllTCP(direction);
+
 
 
 

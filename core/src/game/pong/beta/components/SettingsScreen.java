@@ -51,7 +51,7 @@ public class SettingsScreen extends BaseScreen {
         /**
          *  Label
          */
-        group1 = new ButtonGroup<>();
+        group1 = new ButtonGroup<TextButton>();
         bEN = new TextButton("EN", BaseGame.textButtonStyle);
         group1.add(bEN);
         bPL = new TextButton("PL", BaseGame.textButtonStyle);

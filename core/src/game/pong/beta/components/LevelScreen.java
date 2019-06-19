@@ -52,7 +52,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
 
         // creating a paddle 1(player) & 2(cpu)
         paddle1 = new Paddle(30, (mainStage.getHeight()/2)- 100 , mainStage, new Player(PongGameBeta.nick) );
-        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player("CPU", true));
+        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player("CPU", true, false));
 
         // method to show scoreboard on screen
         showScoreboard();

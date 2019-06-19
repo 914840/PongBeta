@@ -8,6 +8,7 @@ import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
+import game.pong.beta.network.Pong;
 //import game.pong.beta.UDP.UDPClient;
 ////import game.pong.beta.network.ServerSocketPong;
 //import game.pong.beta.UDP.UDPServer;
@@ -27,8 +28,8 @@ public class LobbyScreen extends BaseScreen {
     private Label ip, nick, rules;
     private Label waiting;
 
-//    private UDPServer server;
-//    private UDPClient client;
+
+
     private InetAddress IP;
 
     @Override
@@ -119,7 +120,6 @@ public class LobbyScreen extends BaseScreen {
                         return false;
 
                     PongGameBeta.nick = nickText.getText();
-                    //                        server = new UDPServer(IP.toString(), 8111);
 
                     waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
                     ipAdress.setDisabled(true);
@@ -129,8 +129,12 @@ public class LobbyScreen extends BaseScreen {
                     joinButton.setDisabled(true);
                     mainStage.addActor(waiting);
 
-//                    server.recieveRequest();
-//                    server.sendResponse("OK-server");
+                    MultiScreen multiScreenS = new MultiScreen();
+
+                    multiScreenS.isServer=true;
+                    multiScreenS.setTcpPort(54345);
+                    multiScreenS.setUdpPort(54789);
+                    PongGameBeta.setActiveScreen(multiScreenS);
 
                     return true;
                 }
@@ -150,9 +154,13 @@ public class LobbyScreen extends BaseScreen {
 
 
                     PongGameBeta.nick = nickText.getText();
-//                    client = new UDPClient(ipAdress.getText(), 8111);
-//
-//                    String message = client.send("pong");
+                    MultiScreen multiScreenC = new MultiScreen();
+                    multiScreenC.isServer = false;
+                    multiScreenC.setTcpPort(54345);
+                    multiScreenC.setUdpPort(54789);
+                    multiScreenC.setIpHost(ipAdress.getText());
+                    PongGameBeta.setActiveScreen(multiScreenC);
+
 
 
                     return true;

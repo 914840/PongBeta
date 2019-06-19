@@ -4,12 +4,14 @@ public class Player {
     private String nick;
     private Score score;
     private boolean ai;
+    private boolean online;
 
-    Player(String nick, boolean ai)
+    Player(String nick, boolean ai, boolean online)
     {
         this.nick = nick;
         this.score = new Score(0,0);
         this.ai = ai;
+        this.online = online;
     }
 
     Player(String nick)
@@ -44,4 +46,7 @@ public class Player {
         this.ai = ai;
     }
 
+    public boolean isOnline() { return this.online; }
+
+    public void setOnline(boolean online){ this.online = online; }
 }

@@ -33,6 +33,8 @@ public class Paddle extends BaseActor {
                 accelerateWithoutRotation(-1);
         } else if (player.isAi() == true){
             setDeceleration(maxSpeed);
+        } else if (player.isOnline()== true){
+
         }
 
         applyPhysics(dt);
@@ -59,5 +61,15 @@ public class Paddle extends BaseActor {
 
     public Player getPlayer(){
         return this.player;
+    }
+
+    public void setPaddleDirection(int x){
+        if(x == 1){
+            accelerateWithoutRotation(1);
+        }
+        else if( x == -1){
+            accelerateWithoutRotation(-1);
+        }
+
     }
 }

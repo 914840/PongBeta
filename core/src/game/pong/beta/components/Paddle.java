@@ -26,15 +26,13 @@ public class Paddle extends BaseActor {
     public void act(float dt) {
         super.act(dt);
 
-        if(player.isAi() == false){
+        if(player.isAi() == false && player.isOnline() == false){
             if (Gdx.input.isKeyPressed(Input.Keys.UP))
                 accelerateWithoutRotation(1);
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
                 accelerateWithoutRotation(-1);
-        } else if (player.isAi() == true){
+        } else if (player.isAi() == true) {
             setDeceleration(maxSpeed);
-        } else if (player.isOnline()== true){
-
         }
 
         applyPhysics(dt);

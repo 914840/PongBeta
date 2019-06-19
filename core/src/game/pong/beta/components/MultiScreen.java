@@ -149,6 +149,9 @@ public class MultiScreen extends BaseScreen {
     }
     @Override
     public void update(float dt) {
+        if(client.getUpdateThread().isAlive()){
+            System.out.println("alive");
+        };
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
             direction.y = 1;
@@ -166,12 +169,12 @@ public class MultiScreen extends BaseScreen {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
             PongGameBeta.setActiveScreen( new MenuScreen());
-            if(isServer){
-                server.close();
-            }
-            else if(!isServer){
-                client.close();
-            }
+//            if(isServer){
+//                server.close();
+//            }
+//            else if(!isServer){
+//                client.close();
+//            }
         }
     }
 

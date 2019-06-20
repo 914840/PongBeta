@@ -37,7 +37,7 @@ public class MultiScreenServer extends BaseScreen {
     private SomeRequest request;
     private SomeResponse response;
     private PaddleDirection direction;
-    private Ballposition ballposition;
+    private BallPosition ballPosition;
     private FlagStatus flagStatus;
     private ScoreBoard scoreBoard;
 
@@ -117,8 +117,9 @@ public class MultiScreenServer extends BaseScreen {
             kryo.register(SomeRequest.class);
             kryo.register(SomeResponse.class);
             kryo.register(PaddleDirection.class);
-            kryo.register(Ballposition.class);
+            kryo.register(BallPosition.class);
             kryo.register(FlagStatus.class);
+            kryo.register(ScoreBoard.class);
 
             server.addListener(new Listener() {
                 public void received(Connection connection, Object object) {
@@ -146,22 +147,25 @@ public class MultiScreenServer extends BaseScreen {
                         PaddleDirection direction = (PaddleDirection) object;
                         paddle2.accelerateWithoutRotation(direction.y);
                     }
-                    if  (object instanceof Ballposition) {      // raczej server nie przyjmuje wartości pozycji piłki a ją wysyła
-                        Ballposition ballposition = (Ballposition) object;
+                    if  (object instanceof BallPosition) {      // raczej server nie przyjmuje wartości pozycji piłki a ją wysyła
+                        BallPosition ballposition = (BallPosition) object;
                         ball.setPosition(ballposition.x,ballposition.y);
                     }
                 }
             });
 
             showScoreboard();
-
+            upDateScoreboard();
+            ScoreBoard scoreBoard = new ScoreBoard();
+            scoreBoard.scoreBoard = scoreLabel.toString();
+            server.sendToAllTCP(scoreBoard);
     }
     @Override
     public void update(float dt) {
-        ballposition = new Ballposition();
-        ballposition.x = ball.getX();
-        ballposition.y = ball.getY();
-        server.sendToAllTCP(ballposition);
+        ballPosition = new BallPosition();
+        ballPosition.x = ball.getX();
+        ballPosition.y = ball.getY();
+        server.sendToAllTCP(ballPosition);
 
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
@@ -309,8 +313,13 @@ public class MultiScreenServer extends BaseScreen {
             ball.setPosition((mainStage.getWidth()/4) - 70, mainStage.getHeight()/2);
             ball.setMotionAngle(35);
 
+            ScoreBoard scoreBoard = new ScoreBoard();
             scoreBoard.scoreBoard = scoreLabel.toString();
             server.sendToAllTCP(scoreBoard);
+
+            FlagStatus flagStatus = new FlagStatus();
+            flagStatus.flag = flag;
+            server.sendToAllTCP(flagStatus);
             //resetStartLocationLevelScreen(1); // punkt dla Player 2
             //upDateStartLabel();
 
@@ -328,6 +337,14 @@ public class MultiScreenServer extends BaseScreen {
             ball.setPosition((mainStage.getWidth()/4)*3 + 50, mainStage.getHeight()/2);
             ball.setMotionAngle(125);
 
+            ScoreBoard scoreBoard = new ScoreBoard();
+            scoreBoard.scoreBoard = scoreLabel.toString();
+            server.sendToAllTCP(scoreBoard);
+
+            FlagStatus flagStatus = new FlagStatus();
+            flagStatus.flag = flag;
+            server.sendToAllTCP(flagStatus);
+
             //resetStartLocationLevelScreen(0); // punkt dla Player 1
             //upDateStartLabel();
 
@@ -342,7 +359,7 @@ public class MultiScreenServer extends BaseScreen {
     public static class SomeResponse {
         public String text;
     }
-    public static class Ballposition {
+    public static class BallPosition {
         public float x,y;
     }
     public static class PaddleDirection {

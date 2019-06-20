@@ -42,7 +42,7 @@ public class MultiScreenClient extends BaseScreen {
     private SomeRequest request;
     private SomeResponse response;
     private PaddleDirection direction;
-    private Ballposition ballposition;
+    private BallPosition ballPosition;
     private ScoreBoard scoreBoard;
     private String score;
 
@@ -54,7 +54,7 @@ public class MultiScreenClient extends BaseScreen {
      * Flag codes: 0 - start game, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
      */
     private int flag = 0;
-    private boolean back = false;
+
 
 
     @Override
@@ -128,7 +128,6 @@ public class MultiScreenClient extends BaseScreen {
             } catch (IOException en){
                 System.out.println("Exception: IOException in MultiClient");
                 PongGameBeta.setActiveScreen(new MenuScreen());
-                back = true;
                 client.close();
 
             }
@@ -137,8 +136,9 @@ public class MultiScreenClient extends BaseScreen {
             kryo.register(SomeRequest.class);
             kryo.register(SomeResponse.class);
             kryo.register(PaddleDirection.class);
-            kryo.register(Ballposition.class);
+            kryo.register(BallPosition.class);
             kryo.register(FlagStatus.class);
+            kryo.register(ScoreBoard.class);
 
 
             // Nawiązanie z serverem podstawowej łączności
@@ -171,9 +171,9 @@ public class MultiScreenClient extends BaseScreen {
                         PaddleDirection direction = (PaddleDirection) object;
                         paddle1.accelerateWithoutRotation(direction.y);
                     }
-                    if  (object instanceof Ballposition) {
-                        Ballposition ballposition = (Ballposition) object;
-                        ball.setPosition(ballposition.x,ballposition.y);
+                    if  (object instanceof BallPosition) {
+                        BallPosition ballPosition = (BallPosition) object;
+                        ball.setPosition(ballPosition.x,ballPosition.y);
                     }
                     if  (object instanceof FlagStatus) {
                         FlagStatus flagStatus = (FlagStatus) object;
@@ -187,14 +187,11 @@ public class MultiScreenClient extends BaseScreen {
                 }
             });
 
+            showScoreboard();
 
     }
     @Override
     public void update(float dt) {
-        if(back == true){
-            client.close();
-            setActiveScreen(new MenuScreen());
-        }
 
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
@@ -232,7 +229,7 @@ public class MultiScreenClient extends BaseScreen {
     public static class SomeResponse {
         public String text;
     }
-    public static class Ballposition {
+    public static class BallPosition {
         public float x,y;
     }
     public static class PaddleDirection {

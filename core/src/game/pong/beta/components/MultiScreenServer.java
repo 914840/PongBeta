@@ -24,7 +24,8 @@ public class MultiScreenServer extends BaseScreen {
     private Label scoreLabel, spaceLabel;
 
     private Label waiting;
-    private Label ready;
+    private Label readyClient;
+    private Label readyServer;
     private String ready2;
     public boolean isServer; // zamienna publicza ze wzgledu na bardzo duze zagnieżdzenie.
     private int tcpPort = 54345, udpPort = 54789;
@@ -42,6 +43,7 @@ public class MultiScreenServer extends BaseScreen {
      * Flag codes: 0 - start game, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
      */
     private int flag = 0;
+    private boolean readyToPlay = false;
 
 
     @Override
@@ -72,19 +74,23 @@ public class MultiScreenServer extends BaseScreen {
         if(PongGameBeta.gameLanguage.equals("PL"))
         {
             waiting = new Label( " OCZEKIWANIE NA GRACZA ", BaseGame.labelStyle);
-            ready = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
+            readyClient = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
+            readyServer = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
             ready2 = "GOTOWY!";
         }
         else
         {
             waiting = new Label(" WAITING FOR THE PLAYER ", BaseGame.labelStyle);
-            ready = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
+            readyClient = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
+            readyServer = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
             ready2 = "READY!";
         }
 
         waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
-        ready.setPosition(mainStage.getWidth()/4 - 100, mainStage.getHeight()/2);
-        ready.setVisible(false);
+        readyClient.setPosition(((mainStage.getWidth()/4)*3) - 100, mainStage.getHeight()/2);
+        readyClient.setVisible(false);
+        readyServer.setPosition(mainStage.getWidth()/4 - 100, mainStage.getHeight()/2);
+        readyServer.setVisible(false);
 
         // creating a paddle 1(player) & 2(cpu)
         paddle1 = new Paddle(30, (mainStage.getHeight() / 2) - 100, mainStage, new Player(PongGameBeta.nick));
@@ -96,7 +102,8 @@ public class MultiScreenServer extends BaseScreen {
             server = new Server();
             server.start();
             mainStage.addActor(waiting);
-            mainStage.addActor(ready);
+            mainStage.addActor(readyClient);
+            mainStage.addActor(readyServer);
             try {
                 server.bind(54345, 54789);
             } catch (IOException e) {
@@ -116,10 +123,11 @@ public class MultiScreenServer extends BaseScreen {
                         System.out.println(request.text);
 
                         response = new SomeResponse();
-                        response.text = "Thanks";
+                        response.text = "CONNECT";
                         connection.sendTCP(response);
                         waiting.setVisible(false);
-                        ready.setVisible(true);
+                        readyClient.setVisible(true);
+                        readyServer.setVisible(true);
                     }
                     if  (object instanceof PaddleDirection) {
                         PaddleDirection direction = (PaddleDirection) object;
@@ -163,9 +171,9 @@ public class MultiScreenServer extends BaseScreen {
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag !=1){
-            ready.setText(ready2);
-            request.text = "READY";
-            server.sendToAllTCP(request);
+            readyServer.setText(ready2);
+            response.text = "READY";
+            server.sendToAllTCP(response);
             flag = 1;
 //            ball.setSpeed(600);
 //            ball.setMotionAngle(MathUtils.random(-45, 45));
@@ -273,6 +281,33 @@ public class MultiScreenServer extends BaseScreen {
             }
         }
 
+        /**
+         *  ball cross left border
+         */
+        if (ball.overlaps(endGameBorderLeft))
+        {
+
+            flag = paddle2.getPlayer().getScore().addOnePoint();
+
+            upDateScoreboard();
+            //resetStartLocationLevelScreen(1); // punkt dla Player 2
+            upDateStartLabel();
+
+        }
+
+        /**
+         *  ball cross right border
+         */
+        if (ball.overlaps(endGameBorderRight))
+        {
+            flag = paddle1.getPlayer().getScore().addOnePoint();
+
+            upDateScoreboard();
+            //resetStartLocationLevelScreen(0); // punkt dla Player 1
+            upDateStartLabel();
+
+        }
+
 
     }
 
@@ -299,4 +334,75 @@ public class MultiScreenServer extends BaseScreen {
         this.ipHost = ipHost;
     }
 
+
+    public void upDateScoreboard() {
+        scoreLabel = new Label("",BaseGame.labelStyle);
+        scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
+        uiStage.addActor(scoreLabel);
+        scoreLabel.setText("                       " +
+                paddle1.getPlayer().getScore().getPoints() +
+                "          " +
+                paddle1.getPlayer().getScore().getSets() +
+                "   " +
+                "(" + PongGameBeta.sets + ")" +
+                "   " +
+                paddle2.getPlayer().getScore().getSets() +
+                "          " +
+                paddle2.getPlayer().getScore().getPoints()
+        );
+    }
+
+    public void showStartLabel() {
+        if (PongGameBeta.gameLanguage.equals("PL")) {
+            spaceLabel = new Label(" NACISNIJ SPACJE ABY ZACZAC ", BaseGame.labelStyle);
+        } else {
+            spaceLabel = new Label(" PRESS  SPACE  TO  START  ", BaseGame.labelStyle);
+        }
+        spaceLabel.setPosition((mainStage.getWidth() / 4) - 100, mainStage.getHeight() / 2);
+        spaceLabel.setVisible(false);
+
+        uiStage.addActor(spaceLabel);
+    }
+
+    public void upDateStartLabel()
+    {
+        if(PongGameBeta.gameLanguage.equals("PL"))
+        {
+            if(flag == 0)
+            {
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+            }
+            else if (flag == 2)
+            {
+                spaceLabel.setText(" PUNKT SETOWY! ");
+            }
+            else if( flag == 9)
+            {
+                spaceLabel.setText(" PUNKT MECZOWY !!! ");
+            }
+            else if( flag == 99)
+            {
+                spaceLabel.setText(" KONIEC GRY ");
+            }
+        }
+        else if(PongGameBeta.gameLanguage.equals("EN") )
+        {
+            if(flag == 0)
+            {
+                spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+            }
+            else if (flag == 2)
+            {
+                spaceLabel.setText(" SET POINT! ");
+            }
+            else if( flag == 9)
+            {
+                spaceLabel.setText(" MATCH POINT !!! ");
+            }
+            else if( flag == 99)
+            {
+                spaceLabel.setText(" END GAME ");
+            }
+        }
+    }
 }

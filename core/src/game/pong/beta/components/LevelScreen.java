@@ -176,7 +176,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         }
 
         /**
-         *  bounced ball from UP border
+         *  bounced ball from DOWN border
          */
         if (ball.overlaps(borderDown))
         {
@@ -198,7 +198,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         if (ball.overlaps(endGameBorderLeft))
         {
 
-            setFlag( paddle2.getPlayer().getScore().addOnePoint() );
+            flag = paddle2.getPlayer().getScore().addOnePoint();
 
                 upDateScoreboard();
                 resetStartLocationLevelScreen(1); // punkt dla Player 2
@@ -211,7 +211,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
          */
         if (ball.overlaps(endGameBorderRight))
         {
-            setFlag( paddle1.getPlayer().getScore().addOnePoint() );
+            flag = paddle1.getPlayer().getScore().addOnePoint();
 
             upDateScoreboard();
             resetStartLocationLevelScreen(0); // punkt dla Player 1

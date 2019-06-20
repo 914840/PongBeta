@@ -40,6 +40,7 @@ public class MultiScreenServer extends BaseScreen {
     private BallPosition ballPosition;
     private FlagStatus flagStatus;
     private ScoreBoard scoreBoard;
+    private PaddlePosition paddlePosition;
 
     /**
      * Flag codes: -1 - start game, 0 - game ready, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
@@ -120,6 +121,7 @@ public class MultiScreenServer extends BaseScreen {
             kryo.register(BallPosition.class);
             kryo.register(FlagStatus.class);
             kryo.register(ScoreBoard.class);
+            kryo.register(PaddlePosition.class);
 
             server.addListener(new Listener() {
                 public void received(Connection connection, Object object) {
@@ -150,6 +152,10 @@ public class MultiScreenServer extends BaseScreen {
                     if  (object instanceof BallPosition) {      // raczej server nie przyjmuje wartości pozycji piłki a ją wysyła
                         BallPosition ballposition = (BallPosition) object;
                         ball.setPosition(ballposition.x,ballposition.y);
+                    }
+                    if  (object instanceof PaddlePosition){
+                        PaddlePosition paddlePosition = (PaddlePosition) object;
+                        paddle2.setPosition(paddle2.getX(), paddlePosition.y);
                     }
                 }
             });
@@ -372,6 +378,9 @@ public class MultiScreenServer extends BaseScreen {
     }
     public static class ScoreBoard{
         public String scoreBoard;
+    }
+    public static class PaddlePosition {
+        public float y;
     }
 
     public void setTcpPort(int tcpPort){

@@ -45,6 +45,7 @@ public class MultiScreenClient extends BaseScreen {
     private BallPosition ballPosition;
     private ScoreBoard scoreBoard;
     private String score;
+    private PaddlePosition paddlePosition;
 
     private String ipHost;
     private int tcpPort = 54345;
@@ -139,6 +140,7 @@ public class MultiScreenClient extends BaseScreen {
             kryo.register(BallPosition.class);
             kryo.register(FlagStatus.class);
             kryo.register(ScoreBoard.class);
+            kryo.register(PaddlePosition.class);
 
 
             // Nawiązanie z serverem podstawowej łączności
@@ -193,14 +195,18 @@ public class MultiScreenClient extends BaseScreen {
     @Override
     public void update(float dt) {
 
-        direction = new PaddleDirection();
+        paddlePosition = new PaddlePosition();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
-            direction.y = 1;
-            client.sendTCP(direction);
+            paddlePosition.y = paddle2.getY();
+            client.sendTCP(paddlePosition);
+//            direction.y = 1;
+//            client.sendTCP(direction);
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            direction.y = -1;
-            client.sendTCP(direction);
+            paddlePosition.y = paddle2.getY();
+            client.sendTCP(paddlePosition);
+//            direction.y = -1;
+//            client.sendTCP(direction);
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag != 1 ){
@@ -236,6 +242,9 @@ public class MultiScreenClient extends BaseScreen {
     }
     public static class ScoreBoard{
         public String scoreBoard;
+    }
+    public static class PaddlePosition {
+        public float y;
     }
 
     public void setTcpPort(int tcpPort){

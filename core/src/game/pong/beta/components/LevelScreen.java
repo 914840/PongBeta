@@ -11,7 +11,7 @@ import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
 
-public class LevelScreen extends BaseScreen implements HudComponent {
+public class LevelScreen extends BaseScreen{
 
     private BaseActor background;
     private Paddle paddle1, paddle2;
@@ -223,12 +223,11 @@ public class LevelScreen extends BaseScreen implements HudComponent {
 
     }
 
-    @Override
+
     public float getPlayerScore(Player player) {
         return 0;
     }
 
-    @Override
     public void showScoreboard() {
         scoreLabel = new Label(paddle1.getPlayer().getNick() +
                 "    " +
@@ -250,7 +249,6 @@ public class LevelScreen extends BaseScreen implements HudComponent {
     }
 
 
-    @Override
 
     //TODO poprawić scoreboard jak w showScoreBoard - bez wyśfietlania nicków.
     public void upDateScoreboard() {

@@ -1,5 +1,6 @@
 package game.pong.beta.components;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
@@ -7,13 +8,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.KryoNetException;
 import com.esotericsoftware.kryonet.Listener;
 import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
+import game.pong.beta.network.Pong;
 
 import java.io.IOException;
+
+import static game.pong.beta.PongGameBeta.*;
 
 public class MultiScreenClient extends BaseScreen {
 
@@ -31,7 +36,6 @@ public class MultiScreenClient extends BaseScreen {
     private Label readyClient;
     private Label readyServer;
     private String ready2;
-    public boolean isServer; // zamienna publicza ze wzgledu na bardzo duze zagnieżdzenie.
 
     private Client client;
 
@@ -49,6 +53,7 @@ public class MultiScreenClient extends BaseScreen {
      * Flag codes: 0 - start game, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
      */
     private int flag = 0;
+    private boolean back = false;
 
 
     @Override
@@ -76,7 +81,7 @@ public class MultiScreenClient extends BaseScreen {
         // creating a solid right border
         endGameBorderRight = new BaseActor(mainStage.getWidth() - 2, 0, mainStage);
         endGameBorderRight.loadTexture("border2x900endGame.png");
-        if(PongGameBeta.gameLanguage.equals("PL"))
+        if(gameLanguage.equals("PL"))
         {
             waiting = new Label( " OCZEKIWANIE NA SERVER ", BaseGame.labelStyle);
             readyClient = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
@@ -101,20 +106,32 @@ public class MultiScreenClient extends BaseScreen {
 
         // creating a paddle 1(player) & 2(cpu)
         paddle1 = new Paddle(30, (mainStage.getHeight() / 2) - 100, mainStage, new Player(" ", false,true));
-        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player(PongGameBeta.nick));
+        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player(nick));
 
         ball = new Ball((mainStage.getWidth()/2)-16, (mainStage.getHeight()/2)-16,mainStage);
-
+        try {
             client = new Client();
             client.start();
+        }
+        catch (KryoNetException e){
+            setActiveScreen(new MenuScreen());
+        }
             mainStage.addActor(waiting);
             mainStage.addActor(readyClient);
             mainStage.addActor(readyServer);
             try {
                 client.connect(5000, PongGameBeta.ipHost, 54345, 54789);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (KryoNetException e) {
+                PongGameBeta.setActiveScreen(new MenuScreen());
+                System.out.println("Exception: KrioNet in MultiClient");
+            } catch (IOException en){
+                System.out.println("Exception: IOException in MultiClient");
+                PongGameBeta.setActiveScreen(new MenuScreen());
+                back = true;
+                client.close();
+
             }
+
             Kryo kryo = client.getKryo();
             kryo.register(SomeRequest.class);
             kryo.register(SomeResponse.class);
@@ -127,9 +144,9 @@ public class MultiScreenClient extends BaseScreen {
             request = new SomeRequest();
             request.text = "INIT";
             client.sendTCP(request);
-            request.text = "NICK" + PongGameBeta.nick;
+            request.text = "NICK" + nick;
             client.sendTCP(request);
-            request.text = PongGameBeta.gameLanguage;
+            request.text = gameLanguage;
 
             client.addListener(new Listener() {
                 public void received (Connection connection, Object object) {
@@ -143,6 +160,10 @@ public class MultiScreenClient extends BaseScreen {
                         }
                         else if(response.text.equals("READY")){
                             readyServer.setText(ready2);
+                        }
+                        else if(response.text.equals("CLOSE")){
+                            client.close();
+                            PongGameBeta.setActiveScreen(new MenuScreen());
                         }
                     }
                     if (object instanceof PaddleDirection) {
@@ -164,7 +185,10 @@ public class MultiScreenClient extends BaseScreen {
     }
     @Override
     public void update(float dt) {
-
+        if(back == true){
+            client.close();
+            setActiveScreen(new MenuScreen());
+        }
 
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
@@ -190,11 +214,9 @@ public class MultiScreenClient extends BaseScreen {
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
-            PongGameBeta.setActiveScreen( new MenuScreen());
-
-            if(!isServer){
+            setActiveScreen( new MenuScreen());
                 client.close();
-            }
+
         }
     }
 
@@ -228,7 +250,7 @@ public class MultiScreenClient extends BaseScreen {
     }
 
     public void showStartLabel() {
-        if (PongGameBeta.gameLanguage.equals("PL")) {
+        if (gameLanguage.equals("PL")) {
             spaceLabel = new Label(" NACISNIJ SPACJE ABY ZACZAC ", BaseGame.labelStyle);
         } else {
             spaceLabel = new Label(" PRESS  SPACE  TO  START  ", BaseGame.labelStyle);
@@ -242,7 +264,7 @@ public class MultiScreenClient extends BaseScreen {
 
     public void upDateStartLabel()
     {
-        if(PongGameBeta.gameLanguage.equals("PL"))
+        if(gameLanguage.equals("PL"))
         {
             if(flag == 0)
             {
@@ -261,7 +283,7 @@ public class MultiScreenClient extends BaseScreen {
                 spaceLabel.setText(" KONIEC GRY ");
             }
         }
-        else if(PongGameBeta.gameLanguage.equals("EN") )
+        else if(gameLanguage.equals("EN") )
         {
             if(flag == 0)
             {

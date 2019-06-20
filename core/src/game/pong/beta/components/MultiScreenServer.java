@@ -46,6 +46,7 @@ public class MultiScreenServer extends BaseScreen {
      */
     private int flag = 0;
     private boolean readyToPlay = false;
+    private boolean isPlayerConnected = false;
 
 
     @Override
@@ -131,6 +132,7 @@ public class MultiScreenServer extends BaseScreen {
                             waiting.setVisible(false);
                             readyClient.setVisible(true);
                             readyServer.setVisible(true);
+                            isPlayerConnected = true;
                         }
                         if(request.text.startsWith("NICK:")){
                             paddle2.getPlayer().setNick(request.text.substring(5));
@@ -151,7 +153,7 @@ public class MultiScreenServer extends BaseScreen {
                 }
             });
 
-            upDateScoreboard();
+            showScoreboard();
 
     }
     @Override
@@ -176,20 +178,22 @@ public class MultiScreenServer extends BaseScreen {
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
+            response.text="CLOSE";
+            server.sendToAllTCP(response);
             PongGameBeta.setActiveScreen( new MenuScreen());
             if(isServer){
                 server.close();
             }
         }
 
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag !=1){
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag !=1 && isPlayerConnected == true){
             readyServer.setText(ready2);
             response.text = "READY";
             server.sendToAllTCP(response);
             flag = 1;
 
         }
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) &&  readyToPlay == true)){
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true){
             ball.setSpeed(600);
             ball.setMotionAngle(MathUtils.random(-45, 45));
         }

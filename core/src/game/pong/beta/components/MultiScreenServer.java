@@ -2,6 +2,7 @@ package game.pong.beta.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
@@ -23,6 +24,8 @@ public class MultiScreenServer extends BaseScreen {
     private Label scoreLabel, spaceLabel;
 
     private Label waiting;
+    private Label ready;
+    private String ready2;
     public boolean isServer; // zamienna publicza ze wzgledu na bardzo duze zagnieżdzenie.
     private int tcpPort = 54345, udpPort = 54789;
     private String ipHost;
@@ -69,14 +72,19 @@ public class MultiScreenServer extends BaseScreen {
         if(PongGameBeta.gameLanguage.equals("PL"))
         {
             waiting = new Label( " OCZEKIWANIE NA GRACZA ", BaseGame.labelStyle);
+            ready = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
+            ready2 = "GOTOWY!";
         }
         else
         {
             waiting = new Label(" WAITING FOR THE PLAYER ", BaseGame.labelStyle);
+            ready = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
+            ready2 = "READY!";
         }
 
         waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
-
+        ready.setPosition(mainStage.getWidth()/4 - 100, mainStage.getHeight()/2);
+        ready.setVisible(false);
 
         // creating a paddle 1(player) & 2(cpu)
         paddle1 = new Paddle(30, (mainStage.getHeight() / 2) - 100, mainStage, new Player(PongGameBeta.nick));
@@ -88,6 +96,7 @@ public class MultiScreenServer extends BaseScreen {
             server = new Server();
             server.start();
             mainStage.addActor(waiting);
+            mainStage.addActor(ready);
             try {
                 server.bind(54345, 54789);
             } catch (IOException e) {
@@ -110,6 +119,7 @@ public class MultiScreenServer extends BaseScreen {
                         response.text = "Thanks";
                         connection.sendTCP(response);
                         waiting.setVisible(false);
+                        ready.setVisible(true);
                     }
                     if  (object instanceof PaddleDirection) {
                         PaddleDirection direction = (PaddleDirection) object;
@@ -151,6 +161,119 @@ public class MultiScreenServer extends BaseScreen {
                 server.close();
             }
         }
+
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag !=1){
+            ready.setText(ready2);
+            request.text = "READY";
+            server.sendToAllTCP(request);
+            flag = 1;
+//            ball.setSpeed(600);
+//            ball.setMotionAngle(MathUtils.random(-45, 45));
+        }
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE))){
+            ball.setSpeed(600);
+            ball.setMotionAngle(MathUtils.random(-45, 45));
+        }
+
+        /**
+         *  bounced ball from paddle1  - Player
+         */
+        if (ball.overlaps(paddle1))
+        {
+            if (paddle1.isMoving())
+            {
+                if((paddle1.getY() + 25) < (ball.getY()-32) || paddle1.getY()+ 175 > (ball.getY() +32))
+                {
+                    float a = 180 - ball.getMotionAngle() + MathUtils.random(45, 60);
+                    if (a > 80 && a < 280 )
+                    {
+                        a = MathUtils.random(50, 75);
+                    }
+                    ball.setMotionAngle(a);
+                }
+                else if((paddle1.getY() + 60) < (ball.getY()-32) ||  paddle1.getY()+ 140 > (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(30, 50));
+                }
+                else if((paddle1.getY() + 60) > (ball.getY()-32) &&  paddle1.getY()+ 140 < (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(10, 30));
+                }
+            }
+            else if (!paddle1.isMoving())
+            {
+                ball.setMotionAngle(180 - ball.getMotionAngle());
+            }
+        }
+
+        /**
+         *  bounced ball from paddle2  - CPU
+         */
+        if (ball.overlaps(paddle2))
+        {
+            if (paddle2.isMoving())
+            {
+                if((paddle1.getY() + 25) < (ball.getY()-32) || paddle1.getY()+ 175 > (ball.getY() +32))
+                {
+                    float a = 180 - ball.getMotionAngle() + MathUtils.random(45, 60);
+                    if (a > 260 && a < 100 )
+                    {
+                        a = MathUtils.random(120, 160);
+                    }
+                    ball.setMotionAngle(a);
+                }
+                else if((paddle1.getY() + 60) < (ball.getY()-32) ||  paddle1.getY()+ 140 > (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(30, 50));
+                }
+                else if((paddle1.getY() + 60) > (ball.getY()-32) &&  paddle1.getY()+ 140 < (ball.getY() +32))
+                {
+                    ball.setMotionAngle(180 - ball.getMotionAngle() + MathUtils.random(10, 30));
+                }
+            }
+            else if (!paddle2.isMoving())
+            {
+                ball.setMotionAngle(180 - ball.getMotionAngle());
+            }
+        }
+
+
+        /**
+         *  bounced ball from UP border
+         */
+        if (ball.overlaps(borderUp))
+        {
+
+            float angle = (180 - ball.getMotionAngle()) + 180;
+            if (angle > 350){
+                ball.setMotionAngle(angle - 15);
+            }
+            else if( angle < 190 ){
+                ball.setMotionAngle(angle + 15);
+            }
+            else {
+                ball.setMotionAngle(angle);
+            }
+        }
+
+        /**
+         *  bounced ball from UP border
+         */
+        if (ball.overlaps(borderDown))
+        {
+            float angle = (180 - ball.getMotionAngle()) + 180;
+            if (angle < 10){
+                ball.setMotionAngle(angle + 15);
+            }
+            else if( angle > 170 ){
+                ball.setMotionAngle(angle - 15);
+            }
+            else {
+                ball.setMotionAngle(angle);
+            }
+        }
+
+
     }
 
     public static class SomeRequest {

@@ -2,6 +2,7 @@ package game.pong.beta.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -27,6 +28,8 @@ public class MultiScreenClient extends BaseScreen {
     private Label scoreLabel, spaceLabel;
 
     private Label waiting;
+    private Label ready;
+    private String ready2;
     public boolean isServer; // zamienna publicza ze wzgledu na bardzo duze zagnieżdzenie.
 
     private Client client;
@@ -73,14 +76,20 @@ public class MultiScreenClient extends BaseScreen {
         endGameBorderRight.loadTexture("border2x900endGame.png");
         if(PongGameBeta.gameLanguage.equals("PL"))
         {
-            waiting = new Label( " OCZEKIWANIE NA GRACZA ", BaseGame.labelStyle);
+            waiting = new Label( " OCZEKIWANIE NA SERVER ", BaseGame.labelStyle);
+            ready = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
+            ready2 = "GOTOWY!";
         }
         else
         {
-            waiting = new Label(" WAITING FOR THE PLAYER ", BaseGame.labelStyle);
+            waiting = new Label(" WAITING FOR THE SERVER ", BaseGame.labelStyle);
+            ready = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
+            ready2 = "READY!";
         }
 
         waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
+        ready.setPosition(((mainStage.getWidth()/4)*3) - 100, mainStage.getHeight()/2);
+        ready.setVisible(false);
 
 
         // creating a paddle 1(player) & 2(cpu)
@@ -91,6 +100,8 @@ public class MultiScreenClient extends BaseScreen {
 
             client = new Client();
             client.start();
+            mainStage.addActor(waiting);
+            mainStage.addActor(ready);
             try {
                 client.connect(5000, PongGameBeta.ipHost, 54345, 54789);
             } catch (IOException e) {
@@ -116,6 +127,8 @@ public class MultiScreenClient extends BaseScreen {
                     if (object instanceof SomeResponse) {
                         SomeResponse response = (SomeResponse)object;
                         System.out.println(response.text);
+                        waiting.setVisible(false);
+                        ready.setVisible(true);
                     }
                     if (object instanceof PaddleDirection) {
                         PaddleDirection direction = (PaddleDirection) object;
@@ -144,7 +157,12 @@ public class MultiScreenClient extends BaseScreen {
             client.sendTCP(direction);
         }
 
-
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag != 1 ){
+            ready.setText(ready2);
+            request.text = "READY";
+            client.sendTCP(request);
+            flag = 1;
+        }
 
 
 

@@ -29,6 +29,4 @@ public class Ball extends BaseActor {
 
     }
 
-    //TODO
-    // Metody do obsługi odbicia od Paddle oraz od ściany
 }

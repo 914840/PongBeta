@@ -42,9 +42,9 @@ public class MultiScreenServer extends BaseScreen {
     private ScoreBoard scoreBoard;
 
     /**
-     * Flag codes: 0 - start game, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
+     * Flag codes: -1 - start game, 0 - game ready, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
      */
-    private int flag = 0;
+    private int flag = -1;
     private boolean readyToPlay = false;
     private boolean isPlayerConnected = false;
 
@@ -100,7 +100,7 @@ public class MultiScreenServer extends BaseScreen {
         paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player("CPU", false, true));
 
         ball = new Ball((mainStage.getWidth()/2)-16, (mainStage.getHeight()/2)-16,mainStage);
-
+        ball.setMotionAngle(35);
 
             server = new Server();
             server.start();
@@ -190,16 +190,18 @@ public class MultiScreenServer extends BaseScreen {
             }
         }
 
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag !=1 && isPlayerConnected == true){
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && isPlayerConnected == true){
             readyServer.setText(ready2);
             response.text = "READY";
             server.sendToAllTCP(response);
-            flag = 1;
+            flag = 0;
 
         }
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true){
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true && flag != 1) {
             ball.setSpeed(600);
-            ball.setMotionAngle(MathUtils.random(-45, 45));
+//            ball.setMotionAngle(MathUtils.random(-45, 45));
+            flag = 1;
+
         }
 
         /**

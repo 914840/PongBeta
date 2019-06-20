@@ -210,10 +210,6 @@ public class MultiScreenClient extends BaseScreen {
             flag = 1;
         }
 
-
-
-
-
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {

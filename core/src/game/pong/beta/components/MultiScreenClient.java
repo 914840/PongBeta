@@ -44,6 +44,7 @@ public class MultiScreenClient extends BaseScreen {
     private PaddleDirection direction;
     private Ballposition ballposition;
     private ScoreBoard scoreBoard;
+    private String score;
 
     private String ipHost;
     private int tcpPort = 54345;
@@ -178,6 +179,11 @@ public class MultiScreenClient extends BaseScreen {
                         FlagStatus flagStatus = (FlagStatus) object;
                         flag = flagStatus.flag;
                     }
+                    if  (object instanceof  ScoreBoard) {
+                        ScoreBoard scoreBoard = (ScoreBoard) object;
+                        score = scoreBoard.scoreBoard;
+                        upDateScoreBoard();
+                    }
                 }
             });
 
@@ -259,6 +265,17 @@ public class MultiScreenClient extends BaseScreen {
         spaceLabel.setVisible(false);
 
         uiStage.addActor(spaceLabel);
+    }
+
+    public void showScoreboard() {
+        scoreLabel = new Label("", BaseGame.labelStyle);
+        scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
+
+        uiStage.addActor(scoreLabel);
+
+    }
+    public void upDateScoreBoard(){
+        scoreLabel.setText(score);
     }
 
 

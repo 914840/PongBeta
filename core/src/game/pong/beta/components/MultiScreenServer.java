@@ -280,7 +280,7 @@ public class MultiScreenServer extends BaseScreen {
         }
 
         /**
-         *  bounced ball from UP border
+         *  bounced ball from DOWN border
          */
         if (ball.overlaps(borderDown))
         {
@@ -305,6 +305,12 @@ public class MultiScreenServer extends BaseScreen {
             flag = paddle2.getPlayer().getScore().addOnePoint();
 
             upDateScoreboard();
+            ball.setSpeed(0);
+            ball.setPosition((mainStage.getWidth()/4) - 70, mainStage.getHeight()/2);
+            ball.setMotionAngle(35);
+
+            scoreBoard.scoreBoard = scoreLabel.toString();
+            server.sendToAllTCP(scoreBoard);
             //resetStartLocationLevelScreen(1); // punkt dla Player 2
             //upDateStartLabel();
 
@@ -318,6 +324,10 @@ public class MultiScreenServer extends BaseScreen {
             flag = paddle1.getPlayer().getScore().addOnePoint();
 
             upDateScoreboard();
+            ball.setSpeed(0);
+            ball.setPosition((mainStage.getWidth()/4)*3 + 50, mainStage.getHeight()/2);
+            ball.setMotionAngle(125);
+
             //resetStartLocationLevelScreen(0); // punkt dla Player 1
             //upDateStartLabel();
 

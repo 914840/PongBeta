@@ -41,6 +41,7 @@ public class MultiScreenServer extends BaseScreen {
     private FlagStatus flagStatus;
     private ScoreBoard scoreBoard;
     private PaddlePosition paddlePosition;
+    private StartLable startLable;
 
     /**
      * Flag codes: -1 - start game, 0 - game ready, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
@@ -122,6 +123,7 @@ public class MultiScreenServer extends BaseScreen {
             kryo.register(FlagStatus.class);
             kryo.register(ScoreBoard.class);
             kryo.register(PaddlePosition.class);
+            kryo.register(StartLable.class);
 
             server.addListener(new Listener() {
                 public void received(Connection connection, Object object) {
@@ -161,6 +163,7 @@ public class MultiScreenServer extends BaseScreen {
             });
 
             showScoreboard();
+            showStartLabel();
             upDateScoreboard();
             ScoreBoard scoreBoard = new ScoreBoard();
             scoreBoard.scoreBoard = scoreLabel.toString();
@@ -329,7 +332,7 @@ public class MultiScreenServer extends BaseScreen {
             flagStatus.flag = flag;
             server.sendToAllTCP(flagStatus);
             //resetStartLocationLevelScreen(1); // punkt dla Player 2
-            //upDateStartLabel();
+            upDateStartLabel();
 
         }
 
@@ -355,6 +358,10 @@ public class MultiScreenServer extends BaseScreen {
 
             //resetStartLocationLevelScreen(0); // punkt dla Player 1
             //upDateStartLabel();
+            startLable = new StartLable();
+            startLable.isVisibile = true;
+            server.sendToAllTCP(startLable);
+
 
         }
 
@@ -381,6 +388,9 @@ public class MultiScreenServer extends BaseScreen {
     }
     public static class PaddlePosition {
         public float y;
+    }
+    public static class StartLable{
+        public boolean isVisibile;
     }
 
     public void setTcpPort(int tcpPort){
@@ -429,6 +439,7 @@ public class MultiScreenServer extends BaseScreen {
 
     public void upDateStartLabel()
     {
+        spaceLabel.setVisible(true);
         if(PongGameBeta.gameLanguage.equals("PL"))
         {
             if(flag == 0)

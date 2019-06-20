@@ -46,16 +46,19 @@ public class MultiScreenClient extends BaseScreen {
     private ScoreBoard scoreBoard;
     private String score;
     private PaddlePosition paddlePosition;
+    private StartLable startLable;
+
+
 
     private String ipHost;
     private int tcpPort = 54345;
     private int udpPort = 54789;
 
     /**
-     * Flag codes: 0 - start game, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
+     * Flag codes: -1 - start game, 0 - game ready, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
      */
     private int flag = 0;
-
+    private boolean isVisible = false;
 
 
     @Override
@@ -125,7 +128,7 @@ public class MultiScreenClient extends BaseScreen {
                 client.connect(5000, PongGameBeta.ipHost, 54345, 54789);
             } catch (KryoNetException e) {
                 PongGameBeta.setActiveScreen(new MenuScreen());
-                System.out.println("Exception: KrioNet in MultiClient");
+                System.out.println("Exception: KryoNet in MultiClient");
             } catch (IOException en){
                 System.out.println("Exception: IOException in MultiClient");
                 PongGameBeta.setActiveScreen(new MenuScreen());
@@ -141,6 +144,7 @@ public class MultiScreenClient extends BaseScreen {
             kryo.register(FlagStatus.class);
             kryo.register(ScoreBoard.class);
             kryo.register(PaddlePosition.class);
+            kryo.register(StartLable.class);
 
 
             // Nawiązanie z serverem podstawowej łączności
@@ -186,10 +190,16 @@ public class MultiScreenClient extends BaseScreen {
                         score = scoreBoard.scoreBoard;
                         upDateScoreBoard();
                     }
+                    if  (object instanceof  StartLable) {
+                        StartLable startLable = (StartLable) object;
+                        isVisible = startLable.isVisibile;
+
+                    }
                 }
             });
 
             showScoreboard();
+            showStartLabel();
 
     }
     @Override
@@ -197,24 +207,32 @@ public class MultiScreenClient extends BaseScreen {
 
         paddlePosition = new PaddlePosition();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
-            paddlePosition.y = paddle2.getY();
-            client.sendTCP(paddlePosition);
-//            direction.y = 1;
-//            client.sendTCP(direction);
+//            paddlePosition.y = paddle2.getY();
+//            client.sendTCP(paddlePosition);
+            direction.y = 1;
+            client.sendTCP(direction);
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            paddlePosition.y = paddle2.getY();
-            client.sendTCP(paddlePosition);
-//            direction.y = -1;
-//            client.sendTCP(direction);
+//            paddlePosition.y = paddle2.getY();
+//            client.sendTCP(paddlePosition);
+            direction.y = -1;
+            client.sendTCP(direction);
         }
-
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag != 1 ){
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1) {
             readyClient.setText(ready2);
             request.text = "READY";
             client.sendTCP(request);
+            flag = 0;
+        }
+
+
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 2 || flag == 9 )){
+            readyClient.setText("");
+            spaceLabel.setText("");
             flag = 1;
         }
+
+
 
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
@@ -222,6 +240,10 @@ public class MultiScreenClient extends BaseScreen {
             setActiveScreen( new MenuScreen());
                 client.close();
 
+        }
+
+        if(isVisible == true){
+            upDateStartLabel();
         }
     }
 
@@ -245,6 +267,9 @@ public class MultiScreenClient extends BaseScreen {
     }
     public static class PaddlePosition {
         public float y;
+    }
+    public static class StartLable{
+        public boolean isVisibile;
     }
 
     public void setTcpPort(int tcpPort){

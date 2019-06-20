@@ -139,12 +139,15 @@ public class MultiScreenServer extends BaseScreen {
                             readyServer.setVisible(true);
                             isPlayerConnected = true;
                         }
-                        if(request.text.startsWith("NICK:")){
+                        if(request.text.startsWith("NICK:")) {
                             paddle2.getPlayer().setNick(request.text.substring(5));
                         }
-                        if(request.text.equals("READY")){
+                        if(request.text.equals("READY")) {
                             readyClient.setText(ready2);
                             readyToPlay = true;
+                        }
+                        if(request.text.equals("PLAY")) {
+                            ball.setSpeed(800);
                         }
                     }
                     if  (object instanceof PaddleDirection) {
@@ -206,8 +209,8 @@ public class MultiScreenServer extends BaseScreen {
             flag = 0;
 
         }
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true && flag != 1) {
-            ball.setSpeed(600);
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true && flag == 0 || flag == 2 || flag == 9) {
+            ball.setSpeed(800);
 //            ball.setMotionAngle(MathUtils.random(-45, 45));
             flag = 1;
 

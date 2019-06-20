@@ -8,12 +8,10 @@ import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
-import game.pong.beta.network.Pong;
 //import game.pong.beta.UDP.UDPClient;
 ////import game.pong.beta.network.ServerSocketPong;
 //import game.pong.beta.UDP.UDPServer;
 import java.net.*;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LobbyScreen extends BaseScreen {
@@ -129,12 +127,8 @@ public class LobbyScreen extends BaseScreen {
                     joinButton.setDisabled(true);
                     mainStage.addActor(waiting);
 
-                    MultiScreen multiScreenS = new MultiScreen();
-
-                    multiScreenS.isServer=true;
-                    multiScreenS.setTcpPort(54345);
-                    multiScreenS.setUdpPort(54789);
-                    PongGameBeta.setActiveScreen(multiScreenS);
+                    MultiScreenServer multiScreenServer = new MultiScreenServer();
+                    PongGameBeta.setActiveScreen(multiScreenServer);
 
                     return true;
                 }
@@ -154,12 +148,9 @@ public class LobbyScreen extends BaseScreen {
 
 
                     PongGameBeta.nick = nickText.getText();
-                    MultiScreen multiScreenC = new MultiScreen();
-                    multiScreenC.isServer = false;
-                    multiScreenC.setTcpPort(54345);
-                    multiScreenC.setUdpPort(54789);
-                    multiScreenC.setIpHost(ipAdress.getText());
-                    PongGameBeta.setActiveScreen(multiScreenC);
+                    MultiScreenClient multiScreenClient = new MultiScreenClient(ipAdress.getText());
+
+                    PongGameBeta.setActiveScreen(multiScreenClient);
 
 
 

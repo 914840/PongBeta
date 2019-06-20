@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -12,11 +11,10 @@ import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
-import game.pong.beta.network.Pong;
 
 import java.io.IOException;
 
-public class MultiScreen extends BaseScreen {
+public class MultiScreenServer extends BaseScreen {
 
     private BaseActor background;
     private Paddle paddle1, paddle2;
@@ -30,7 +28,7 @@ public class MultiScreen extends BaseScreen {
     private String ipHost;
 
     private Server server;
-    private Client client;
+
 
     private SomeRequest request;
     private SomeResponse response;
@@ -83,8 +81,9 @@ public class MultiScreen extends BaseScreen {
         paddle1 = new Paddle(30, (mainStage.getHeight() / 2) - 100, mainStage, new Player(PongGameBeta.nick));
         paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player("CPU", false, true));
 
-        isServer = true; // dlaczego bez tego nie działa server ?!?!
-        if(getIsServer() == true) {
+        ball = new Ball((mainStage.getWidth()/2)-16, (mainStage.getHeight()/2)-16,mainStage);
+
+
             server = new Server();
             server.start();
             mainStage.addActor(waiting);
@@ -114,44 +113,12 @@ public class MultiScreen extends BaseScreen {
                         PaddleDirection direction = (PaddleDirection) object;
                         paddle2.accelerateWithoutRotation(direction.y);
                     }
-                }
-            });
-        }
-        if(getIsServer()== false){
-            client = new Client();
-            client.start();
-            try {
-                client.connect(5000, "192.168.8.101", 54345, 54789);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Kryo kryo = client.getKryo();
-            kryo.register(SomeRequest.class);
-            kryo.register(SomeResponse.class);
-            kryo.register(PaddleDirection.class);
-
-
-            // Nawiązanie z serverem podstawowej łączności
-            request = new SomeRequest();
-            request.text = "Here is the request";
-            client.sendTCP(request);
-            request.text = PongGameBeta.nick;
-            client.sendTCP(request);
-            request.text = PongGameBeta.gameLanguage;
-
-            client.addListener(new Listener() {
-                public void received (Connection connection, Object object) {
-                    if (object instanceof SomeResponse) {
-                        SomeResponse response = (SomeResponse)object;
-                        System.out.println(response.text);
-                    }
-                    if (object instanceof PaddleDirection) {
-                        PaddleDirection direction = (PaddleDirection) object;
-                        paddle1.accelerateWithoutRotation(direction.y);
+                    if  (object instanceof Ballposition) {      // raczej server nie przyjmuje wartości pozycji piłki a ją wysyła
+                        Ballposition ballposition = (Ballposition) object;
+                        ball.setPosition(ballposition.x,ballposition.y);
                     }
                 }
             });
-        }
 
 
     }
@@ -173,18 +140,13 @@ public class MultiScreen extends BaseScreen {
 
 
 
-
-
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
             PongGameBeta.setActiveScreen( new MenuScreen());
-//            if(isServer){
-//                server.close();
-//            }
-//            else if(!isServer){
-//                client.close();
-//            }
+            if(isServer){
+                server.close();
+            }
         }
     }
 
@@ -201,9 +163,6 @@ public class MultiScreen extends BaseScreen {
         public int y;
     }
 
-    public void setIsServer(boolean isServer){
-        this.isServer = isServer;
-    }
     public void setTcpPort(int tcpPort){
         this.tcpPort = tcpPort;
     }
@@ -214,7 +173,4 @@ public class MultiScreen extends BaseScreen {
         this.ipHost = ipHost;
     }
 
-    public boolean getIsServer(){
-        return this.isServer;
-    }
 }

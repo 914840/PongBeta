@@ -205,7 +205,8 @@ public class MultiScreenClient extends BaseScreen {
     @Override
     public void update(float dt) {
 
-        paddlePosition = new PaddlePosition();
+//        paddlePosition = new PaddlePosition();
+        direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
 //            paddlePosition.y = paddle2.getY();
 //            client.sendTCP(paddlePosition);

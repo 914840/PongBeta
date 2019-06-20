@@ -194,22 +194,23 @@ public class MultiScreenServer extends BaseScreen {
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
-            response.text="CLOSE";
-            server.sendToAllTCP(response);
+            if(isPlayerConnected == true) {
+                response.text = "CLOSE";
+                server.sendToAllTCP(response);
+            }
             PongGameBeta.setActiveScreen( new MenuScreen());
             if(isServer){
                 server.close();
             }
         }
-
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && isPlayerConnected == true){
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && isPlayerConnected == true){
             readyServer.setText(ready2);
             response.text = "READY";
             server.sendToAllTCP(response);
             flag = 0;
 
         }
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true && flag == 0 || flag == 2 || flag == 9) {
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true && flag == 0 || flag == 2 || flag == 9) {
             ball.setSpeed(800);
 //            ball.setMotionAngle(MathUtils.random(-45, 45));
             flag = 1;

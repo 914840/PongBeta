@@ -62,7 +62,7 @@ public class LevelScreen extends BaseScreen implements HudComponent {
         // Last item od mainStage
         ball = new Ball((mainStage.getWidth()/2)-16, (mainStage.getHeight()/2)-16,mainStage);
 
-
+        upDateScoreboard();
 
     }
 

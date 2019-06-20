@@ -38,6 +38,8 @@ public class MultiScreenServer extends BaseScreen {
     private SomeResponse response;
     private PaddleDirection direction;
     private Ballposition ballposition;
+    private FlagStatus flagStatus;
+    private ScoreBoard scoreBoard;
 
     /**
      * Flag codes: 0 - start game, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
@@ -115,19 +117,28 @@ public class MultiScreenServer extends BaseScreen {
             kryo.register(SomeResponse.class);
             kryo.register(PaddleDirection.class);
             kryo.register(Ballposition.class);
+            kryo.register(FlagStatus.class);
 
             server.addListener(new Listener() {
                 public void received(Connection connection, Object object) {
                     if (object instanceof SomeRequest) {
                         SomeRequest request = (SomeRequest) object;
                         System.out.println(request.text);
-
-                        response = new SomeResponse();
-                        response.text = "CONNECT";
-                        connection.sendTCP(response);
-                        waiting.setVisible(false);
-                        readyClient.setVisible(true);
-                        readyServer.setVisible(true);
+                        if(request.text.equals("INIT")) {
+                            response = new SomeResponse();
+                            response.text = "CONNECT";
+                            connection.sendTCP(response);
+                            waiting.setVisible(false);
+                            readyClient.setVisible(true);
+                            readyServer.setVisible(true);
+                        }
+                        if(request.text.startsWith("NICK:")){
+                            paddle2.getPlayer().setNick(request.text.substring(5));
+                        }
+                        if(request.text.equals("READY")){
+                            readyClient.setText(ready2);
+                            readyToPlay = true;
+                        }
                     }
                     if  (object instanceof PaddleDirection) {
                         PaddleDirection direction = (PaddleDirection) object;
@@ -140,6 +151,7 @@ public class MultiScreenServer extends BaseScreen {
                 }
             });
 
+            upDateScoreboard();
 
     }
     @Override
@@ -175,16 +187,15 @@ public class MultiScreenServer extends BaseScreen {
             response.text = "READY";
             server.sendToAllTCP(response);
             flag = 1;
-//            ball.setSpeed(600);
-//            ball.setMotionAngle(MathUtils.random(-45, 45));
+
         }
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE))){
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) &&  readyToPlay == true)){
             ball.setSpeed(600);
             ball.setMotionAngle(MathUtils.random(-45, 45));
         }
 
         /**
-         *  bounced ball from paddle1  - Player
+         *  bounced ball from paddle1  - Player-Server
          */
         if (ball.overlaps(paddle1))
         {
@@ -215,7 +226,7 @@ public class MultiScreenServer extends BaseScreen {
         }
 
         /**
-         *  bounced ball from paddle2  - CPU
+         *  bounced ball from paddle2  - Player - Online
          */
         if (ball.overlaps(paddle2))
         {
@@ -291,7 +302,7 @@ public class MultiScreenServer extends BaseScreen {
 
             upDateScoreboard();
             //resetStartLocationLevelScreen(1); // punkt dla Player 2
-            upDateStartLabel();
+            //upDateStartLabel();
 
         }
 
@@ -304,7 +315,7 @@ public class MultiScreenServer extends BaseScreen {
 
             upDateScoreboard();
             //resetStartLocationLevelScreen(0); // punkt dla Player 1
-            upDateStartLabel();
+            //upDateStartLabel();
 
         }
 
@@ -323,6 +334,12 @@ public class MultiScreenServer extends BaseScreen {
     public static class PaddleDirection {
         public int y;
     }
+    public static class FlagStatus {
+        public int flag;
+    }
+    public static class ScoreBoard{
+        public String scoreBoard;
+    }
 
     public void setTcpPort(int tcpPort){
         this.tcpPort = tcpPort;
@@ -334,11 +351,15 @@ public class MultiScreenServer extends BaseScreen {
         this.ipHost = ipHost;
     }
 
+    public void showScoreboard() {
+        scoreLabel = new Label("", BaseGame.labelStyle);
+        scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
+
+        uiStage.addActor(scoreLabel);
+
+    }
 
     public void upDateScoreboard() {
-        scoreLabel = new Label("",BaseGame.labelStyle);
-        scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
-        uiStage.addActor(scoreLabel);
         scoreLabel.setText("                       " +
                 paddle1.getPlayer().getScore().getPoints() +
                 "          " +

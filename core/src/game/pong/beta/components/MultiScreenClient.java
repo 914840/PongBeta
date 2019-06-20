@@ -39,6 +39,7 @@ public class MultiScreenClient extends BaseScreen {
     private SomeResponse response;
     private PaddleDirection direction;
     private Ballposition ballposition;
+    private ScoreBoard scoreBoard;
 
     private String ipHost;
     private int tcpPort = 54345;
@@ -119,13 +120,14 @@ public class MultiScreenClient extends BaseScreen {
             kryo.register(SomeResponse.class);
             kryo.register(PaddleDirection.class);
             kryo.register(Ballposition.class);
+            kryo.register(FlagStatus.class);
 
 
             // Nawiązanie z serverem podstawowej łączności
             request = new SomeRequest();
-            request.text = "Here is the request";
+            request.text = "INIT";
             client.sendTCP(request);
-            request.text = PongGameBeta.nick;
+            request.text = "NICK" + PongGameBeta.nick;
             client.sendTCP(request);
             request.text = PongGameBeta.gameLanguage;
 
@@ -150,6 +152,10 @@ public class MultiScreenClient extends BaseScreen {
                     if  (object instanceof Ballposition) {
                         Ballposition ballposition = (Ballposition) object;
                         ball.setPosition(ballposition.x,ballposition.y);
+                    }
+                    if  (object instanceof FlagStatus) {
+                        FlagStatus flagStatus = (FlagStatus) object;
+                        flag = flagStatus.flag;
                     }
                 }
             });
@@ -203,6 +209,12 @@ public class MultiScreenClient extends BaseScreen {
     }
     public static class PaddleDirection {
         public int y;
+    }
+    public static class FlagStatus {
+        public int flag;
+    }
+    public static class ScoreBoard{
+        public String scoreBoard;
     }
 
     public void setTcpPort(int tcpPort){

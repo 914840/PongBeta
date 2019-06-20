@@ -148,6 +148,7 @@ public class LobbyScreen extends BaseScreen {
 
 
                     PongGameBeta.nick = nickText.getText();
+                    PongGameBeta.ipHost = ipAdress.getText();
                     MultiScreenClient multiScreenClient = new MultiScreenClient(ipAdress.getText());
 
                     PongGameBeta.setActiveScreen(multiScreenClient);

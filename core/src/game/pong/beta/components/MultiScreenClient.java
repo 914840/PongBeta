@@ -34,6 +34,7 @@ public class MultiScreenClient extends BaseScreen {
     private SomeRequest request;
     private SomeResponse response;
     private PaddleDirection direction;
+    private Ballposition ballposition;
 
     private String ipHost;
     private int tcpPort = 54345;
@@ -91,7 +92,7 @@ public class MultiScreenClient extends BaseScreen {
             client = new Client();
             client.start();
             try {
-                client.connect(5000, ipHost, 54345, 54789);
+                client.connect(5000, PongGameBeta.ipHost, 54345, 54789);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -99,6 +100,7 @@ public class MultiScreenClient extends BaseScreen {
             kryo.register(SomeRequest.class);
             kryo.register(SomeResponse.class);
             kryo.register(PaddleDirection.class);
+            kryo.register(Ballposition.class);
 
 
             // Nawiązanie z serverem podstawowej łączności
@@ -146,6 +148,8 @@ public class MultiScreenClient extends BaseScreen {
 
 
 
+
+
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
@@ -164,7 +168,7 @@ public class MultiScreenClient extends BaseScreen {
         public String text;
     }
     public static class Ballposition {
-        public int x,y;
+        public float x,y;
     }
     public static class PaddleDirection {
         public int y;

@@ -33,6 +33,7 @@ public class MultiScreenServer extends BaseScreen {
     private SomeRequest request;
     private SomeResponse response;
     private PaddleDirection direction;
+    private Ballposition ballposition;
 
     /**
      * Flag codes: 0 - start game, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
@@ -97,6 +98,7 @@ public class MultiScreenServer extends BaseScreen {
             kryo.register(SomeRequest.class);
             kryo.register(SomeResponse.class);
             kryo.register(PaddleDirection.class);
+            kryo.register(Ballposition.class);
 
             server.addListener(new Listener() {
                 public void received(Connection connection, Object object) {
@@ -124,9 +126,10 @@ public class MultiScreenServer extends BaseScreen {
     }
     @Override
     public void update(float dt) {
-//        if(client.getUpdateThread().isAlive()){
-//            System.out.println("Alive");
-//        }
+        ballposition = new Ballposition();
+        ballposition.x = ball.getX();
+        ballposition.y = ball.getY();
+        server.sendToAllTCP(ballposition);
 
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
@@ -157,7 +160,7 @@ public class MultiScreenServer extends BaseScreen {
         public String text;
     }
     public static class Ballposition {
-        public int x,y;
+        public float x,y;
     }
     public static class PaddleDirection {
         public int y;

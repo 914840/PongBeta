@@ -171,7 +171,8 @@ public class MultiScreenClient extends BaseScreen {
                         }
                         else if(response.text.equals("CLOSE")){
                             client.close();
-                            PongGameBeta.setActiveScreen(new MenuScreen());
+                            back = true;
+                            //PongGameBeta.setActiveScreen(new MenuScreen());
                         }
                     }
                     if (object instanceof PaddleDirection) {
@@ -224,15 +225,13 @@ public class MultiScreenClient extends BaseScreen {
             direction.y = -1;
             client.sendTCP(direction);
         }
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1) {
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1) {
             readyClient.setText(ready2);
             request.text = "READY";
             client.sendTCP(request);
             flag = 0;
         }
-
-
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0 || flag == 2 || flag == 9 )){
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0 || flag == 2 || flag == 9 )){
             readyClient.setText("");
             spaceLabel.setText("");
             readyServer.setText("");

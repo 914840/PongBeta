@@ -235,6 +235,7 @@ public class MultiScreenClient extends BaseScreen {
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0 || flag == 2 || flag == 9 )){
             readyClient.setText("");
             spaceLabel.setText("");
+            readyServer.setText("");
             request.text = "PLAY";
             client.sendTCP(request);
             flag = 1;

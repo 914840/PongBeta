@@ -14,6 +14,7 @@ import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
 
 import java.io.IOException;
+import java.net.BindException;
 
 public class MultiScreenServer extends BaseScreen {
 
@@ -22,12 +23,14 @@ public class MultiScreenServer extends BaseScreen {
     private Ball ball;
     private BaseActor borderUp, borderDown,endGameBorderLeft, endGameBorderRight, winMessage, gameOverMessage;
     private Label scoreLabel, spaceLabel;
+    private String scoreLabelString;
 
     private Label waiting;
     private Label readyClient;
     private Label readyServer;
     private String ready2;
     private String exit;
+    private String restart;
     private int tcpPort = 54345, udpPort = 54789;
     private String ipHost;
 
@@ -49,6 +52,8 @@ public class MultiScreenServer extends BaseScreen {
     private int flag = -1;
     private boolean readyToPlay = false;
     private boolean isPlayerConnected = false;
+    private boolean reConnection = false;
+    private boolean serverServe = true;
 
 
     @Override
@@ -83,6 +88,7 @@ public class MultiScreenServer extends BaseScreen {
             readyServer = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
             ready2 = "GOTOWY!";
             exit = "Gracz wyszedl z gry";
+            restart = " NACISNIJ SPACJE ABY ZRESETOWAC SERVER LUB ESCAPE ABY WYJSC DO MENU ";
         }
         else
         {
@@ -91,6 +97,7 @@ public class MultiScreenServer extends BaseScreen {
             readyServer = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
             ready2 = "READY!";
             exit = "The Player left the game";
+            restart = " PRESS SPACE TO RESTART SERVER OR ESCAPE TO EXIT TO THE MENU ";
         }
 
         waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
@@ -113,9 +120,13 @@ public class MultiScreenServer extends BaseScreen {
             mainStage.addActor(readyServer);
             try {
                 server.bind(54345, 54789);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (BindException e1) {
+
+                System.out.println("Exception: Bind exception in MultiScreanServer.init");
+            } catch (IOException e){
+
             }
+
 
             Kryo kryo = server.getKryo();
             kryo.register(SomeRequest.class);
@@ -141,22 +152,34 @@ public class MultiScreenServer extends BaseScreen {
                             readyServer.setVisible(true);
                             isPlayerConnected = true;
                         }
-                        if(request.text.startsWith("NICK:")) {
+                        else if(request.text.startsWith("NICK:")) {
                             paddle2.getPlayer().setNick(request.text.substring(5));
                         }
-                        if(request.text.equals("READY")) {
+                        else if(request.text.equals("READY")) {
                             readyClient.setText(ready2);
                             readyToPlay = true;
                         }
-                        if(request.text.equals("PLAY")) {
-                            ball.setSpeed(800);
+                        else if(request.text.equals("PLAY")) {
+                            if(serverServe==false){
+                                ball.setSpeed(800);
+                            }
+                            readyClient.setVisible(false);
+                            readyServer.setVisible(false);
                         }
-                        if(request.text.equals("EXTI")) {
+                        else if(request.text.equals("EXIT")) {
                             readyClient.setText(exit);
+                            readyClient.setVisible(true);
                             paddle1.getPlayer().getScore().setPoints(0);
                             paddle1.getPlayer().getScore().setSets(0);
                             paddle2.getPlayer().getScore().setPoints(0);
                             paddle2.getPlayer().getScore().setSets(0);
+                            upDateScoreboard();
+                            ball.setSpeed(0);
+                            ball.setVisible(false);
+                            spaceLabel.setVisible(true);
+                            spaceLabel.setPosition(spaceLabel.getX(),spaceLabel.getY()- 150);
+                            spaceLabel.setText(restart);
+                            reConnection = true;
                         }
                     }
                     if  (object instanceof PaddleDirection) {
@@ -178,8 +201,9 @@ public class MultiScreenServer extends BaseScreen {
             showStartLabel();
             upDateScoreboard();
             ScoreBoard scoreBoard = new ScoreBoard();
-            scoreBoard.scoreBoard = scoreLabel.toString();
+            scoreBoard.scoreBoard = scoreLabelString;
             server.sendToAllTCP(scoreBoard);
+
     }
     @Override
     public void update(float dt) {
@@ -222,9 +246,17 @@ public class MultiScreenServer extends BaseScreen {
         }
         else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true && flag == 0 || flag == 2 || flag == 9) {
             ball.setSpeed(800);
+            readyServer.setText("");
+            readyClient.setText("");
+
 //            ball.setMotionAngle(MathUtils.random(-45, 45));
             flag = 1;
 
+        }
+        else if(((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && reConnection == true )){
+            server.close();
+            System.out.println("Server restart");
+            PongGameBeta.setActiveScreen(new MultiScreenServer());
         }
 
         /**
@@ -333,13 +365,15 @@ public class MultiScreenServer extends BaseScreen {
 
             flag = paddle2.getPlayer().getScore().addOnePoint();
 
+            serverServe = true;
+
             upDateScoreboard();
             ball.setSpeed(0);
             ball.setPosition((mainStage.getWidth()/4) - 70, mainStage.getHeight()/2);
             ball.setMotionAngle(35);
 
             ScoreBoard scoreBoard = new ScoreBoard();
-            scoreBoard.scoreBoard = scoreLabel.toString();
+            scoreBoard.scoreBoard = scoreLabelString;
             server.sendToAllTCP(scoreBoard);
 
             FlagStatus flagStatus = new FlagStatus();
@@ -357,13 +391,15 @@ public class MultiScreenServer extends BaseScreen {
         {
             flag = paddle1.getPlayer().getScore().addOnePoint();
 
+            serverServe = false;
+
             upDateScoreboard();
             ball.setSpeed(0);
             ball.setPosition((mainStage.getWidth()/4)*3 + 50, mainStage.getHeight()/2);
             ball.setMotionAngle(125);
 
             ScoreBoard scoreBoard = new ScoreBoard();
-            scoreBoard.scoreBoard = scoreLabel.toString();
+            scoreBoard.scoreBoard = scoreLabelString;
             server.sendToAllTCP(scoreBoard);
 
             FlagStatus flagStatus = new FlagStatus();
@@ -426,7 +462,8 @@ public class MultiScreenServer extends BaseScreen {
     }
 
     public void upDateScoreboard() {
-        scoreLabel.setText("                    " +
+
+                scoreLabelString ="                    " +
                 paddle1.getPlayer().getScore().getPoints() +
                 " / "+ PongGameBeta.points + "        " +
                 paddle1.getPlayer().getScore().getSets() +
@@ -435,8 +472,8 @@ public class MultiScreenServer extends BaseScreen {
                 "   " +
                 paddle2.getPlayer().getScore().getSets() +
                 "          " +
-                paddle2.getPlayer().getScore().getPoints() + " / " + PongGameBeta.points
-        );
+                paddle2.getPlayer().getScore().getPoints() + " / " + PongGameBeta.points;
+        scoreLabel.setText(scoreLabelString);
     }
 
     public void showStartLabel() {

@@ -27,7 +27,6 @@ public class MultiScreenServer extends BaseScreen {
     private Label readyClient;
     private Label readyServer;
     private String ready2;
-    public boolean isServer; // zamienna publicza ze wzgledu na bardzo duze zagnieżdzenie.
     private int tcpPort = 54345, udpPort = 54789;
     private String ipHost;
 
@@ -179,6 +178,7 @@ public class MultiScreenServer extends BaseScreen {
         ballPosition.y = ball.getY();
         server.sendToAllTCP(ballPosition);
 
+
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
             direction.y = 1;
@@ -198,10 +198,10 @@ public class MultiScreenServer extends BaseScreen {
                 response.text = "CLOSE";
                 server.sendToAllTCP(response);
             }
+            server.close();
             PongGameBeta.setActiveScreen( new MenuScreen());
-            if(isServer){
-                server.close();
-            }
+
+
         }
         else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && isPlayerConnected == true){
             readyServer.setText(ready2);
@@ -416,16 +416,16 @@ public class MultiScreenServer extends BaseScreen {
     }
 
     public void upDateScoreboard() {
-        scoreLabel.setText("                       " +
+        scoreLabel.setText("                    " +
                 paddle1.getPlayer().getScore().getPoints() +
-                "          " +
+                " / "+ PongGameBeta.points + "        " +
                 paddle1.getPlayer().getScore().getSets() +
                 "   " +
                 "(" + PongGameBeta.sets + ")" +
                 "   " +
                 paddle2.getPlayer().getScore().getSets() +
                 "          " +
-                paddle2.getPlayer().getScore().getPoints()
+                paddle2.getPlayer().getScore().getPoints() + " / " + PongGameBeta.points
         );
     }
 

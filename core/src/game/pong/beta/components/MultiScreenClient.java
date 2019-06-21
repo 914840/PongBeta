@@ -59,6 +59,7 @@ public class MultiScreenClient extends BaseScreen {
      */
     private int flag = 0;
     private boolean isVisible = false;
+    private boolean back;
 
 
     @Override
@@ -127,12 +128,12 @@ public class MultiScreenClient extends BaseScreen {
             try {
                 client.connect(5000, PongGameBeta.ipHost, 54345, 54789);
             } catch (KryoNetException e) {
-                PongGameBeta.setActiveScreen(new MenuScreen());
                 System.out.println("Exception: KryoNet in MultiClient");
             } catch (IOException en){
+                //setActiveScreen(new MenuScreen());
                 System.out.println("Exception: IOException in MultiClient");
-                PongGameBeta.setActiveScreen(new MenuScreen());
-                client.close();
+                back = true;
+                //setActiveScreen(new MenuScreen());
 
             }
 
@@ -204,6 +205,10 @@ public class MultiScreenClient extends BaseScreen {
     }
     @Override
     public void update(float dt) {
+        if(back){
+            client.close();
+            PongGameBeta.setActiveScreen(new MenuScreen());
+        }
 
 //        paddlePosition = new PaddlePosition();
         direction = new PaddleDirection();
@@ -240,8 +245,9 @@ public class MultiScreenClient extends BaseScreen {
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
+            client.close();
             setActiveScreen( new MenuScreen());
-                client.close();
+
 
         }
 
@@ -301,6 +307,17 @@ public class MultiScreenClient extends BaseScreen {
         scoreLabel = new Label("", BaseGame.labelStyle);
         scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
 
+        scoreLabel.setText("                    " +
+                paddle1.getPlayer().getScore().getPoints() +
+                " / "+ PongGameBeta.points + "        " +
+                paddle1.getPlayer().getScore().getSets() +
+                "   " +
+                "(" + PongGameBeta.sets + ")" +
+                "   " +
+                paddle2.getPlayer().getScore().getSets() +
+                "          " +
+                paddle2.getPlayer().getScore().getPoints() + " / " + PongGameBeta.points
+        );
         uiStage.addActor(scoreLabel);
 
     }

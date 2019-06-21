@@ -245,6 +245,8 @@ public class MultiScreenClient extends BaseScreen {
         // powrót do menu, przerwanie gry.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
+            request.text="EXIT";
+            client.sendTCP(request);
             client.close();
             setActiveScreen( new MenuScreen());
 
@@ -328,6 +330,7 @@ public class MultiScreenClient extends BaseScreen {
 
     public void upDateStartLabel()
     {
+
         if(gameLanguage.equals("PL"))
         {
             if(flag == 0)

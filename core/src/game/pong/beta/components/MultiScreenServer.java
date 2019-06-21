@@ -27,6 +27,7 @@ public class MultiScreenServer extends BaseScreen {
     private Label readyClient;
     private Label readyServer;
     private String ready2;
+    private String exit;
     private int tcpPort = 54345, udpPort = 54789;
     private String ipHost;
 
@@ -81,6 +82,7 @@ public class MultiScreenServer extends BaseScreen {
             readyClient = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
             readyServer = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
             ready2 = "GOTOWY!";
+            exit = "Gracz wyszedl z gry";
         }
         else
         {
@@ -88,6 +90,7 @@ public class MultiScreenServer extends BaseScreen {
             readyClient = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
             readyServer = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
             ready2 = "READY!";
+            exit = "The Player left the game";
         }
 
         waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
@@ -147,6 +150,13 @@ public class MultiScreenServer extends BaseScreen {
                         }
                         if(request.text.equals("PLAY")) {
                             ball.setSpeed(800);
+                        }
+                        if(request.text.equals("EXTI")) {
+                            readyClient.setText(exit);
+                            paddle1.getPlayer().getScore().setPoints(0);
+                            paddle1.getPlayer().getScore().setSets(0);
+                            paddle2.getPlayer().getScore().setPoints(0);
+                            paddle2.getPlayer().getScore().setSets(0);
                         }
                     }
                     if  (object instanceof PaddleDirection) {

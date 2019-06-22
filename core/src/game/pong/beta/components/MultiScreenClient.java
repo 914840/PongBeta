@@ -260,7 +260,7 @@ public class MultiScreenClient extends BaseScreen {
             isClientReady = true;
 
         }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0 || flag == 2 || flag == 9 )){
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && isClientServe && (flag == 0 || flag == 2 || flag == 9 )){
             readyClient.setText("");
             spaceLabel.setText("");
             readyServer.setText("");

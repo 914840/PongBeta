@@ -171,7 +171,8 @@ public class MultiScreenServer extends BaseScreen {
                         else if(request.text.equals("PLAY")) {
                             if( !serverServe && isServerReady){
                                 ball.setSpeed(900);
-                                flag = 1;
+                                //flag = 1;
+                                ball.setMotionAngle(120);
                                 readyClient.setVisible(false);
                                 readyServer.setVisible(false);
                             }
@@ -292,11 +293,13 @@ public class MultiScreenServer extends BaseScreen {
             serverServe = false;
             readyServer.setText("");
             readyClient.setText("");
+            spaceLabel.setText("");
 
             flag = 1;
             flagStatus = new FlagStatus();
             flagStatus.flag = 1;
             server.sendToAllTCP(flagStatus);
+
 
         }
         else if(((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && reConnection == true )){

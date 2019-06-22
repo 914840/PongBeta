@@ -50,10 +50,11 @@ public class MultiScreenServer extends BaseScreen {
      * Flag codes: -1 - start game, 0 - game ready, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
      */
     private int flag = -1;
-    private boolean readyToPlay = false;
+    private boolean isClientReady = false;
     private boolean isPlayerConnected = false;
     private boolean reConnection = false;
     private boolean serverServe = true;
+    private boolean isServerReady;
 
 
     @Override
@@ -157,14 +158,22 @@ public class MultiScreenServer extends BaseScreen {
                         }
                         else if(request.text.equals("READY")) {
                             readyClient.setText(ready2);
-                            readyToPlay = true;
+                            isClientReady = true;
                         }
                         else if(request.text.equals("PLAY")) {
-                            if(serverServe==false){
+                            if( !serverServe && isServerReady){
                                 ball.setSpeed(800);
+                                readyClient.setVisible(false);
+                                readyServer.setVisible(false);
                             }
-                            readyClient.setVisible(false);
-                            readyServer.setVisible(false);
+                            else if(serverServe && isServerReady){
+                                readyClient.setVisible(false);
+                            }
+                            else if(!serverServe && !isServerReady){
+
+                            }
+
+
                         }
                         else if(request.text.equals("EXIT")) {
                             readyClient.setText(exit);
@@ -244,7 +253,7 @@ public class MultiScreenServer extends BaseScreen {
             flag = 0;
 
         }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  readyToPlay == true && flag == 0 || flag == 2 || flag == 9) {
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  isClientReady == true && flag == 0 || flag == 2 || flag == 9) {
             ball.setSpeed(800);
             readyServer.setText("");
             readyClient.setText("");

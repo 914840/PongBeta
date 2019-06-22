@@ -1,9 +1,7 @@
 package game.pong.beta.components;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -14,7 +12,6 @@ import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
-import game.pong.beta.network.Pong;
 
 import java.io.IOException;
 
@@ -60,6 +57,7 @@ public class MultiScreenClient extends BaseScreen {
     private int flag = 0;
     private boolean isVisible = false;
     private boolean back;
+    private boolean isServerReady = false;
 
 
     @Override
@@ -168,6 +166,7 @@ public class MultiScreenClient extends BaseScreen {
                         }
                         else if(response.text.equals("READY")){
                             readyServer.setText(ready2);
+                            isServerReady = true;
                         }
                         else if(response.text.equals("CLOSE")){
                             client.close();
@@ -229,7 +228,7 @@ public class MultiScreenClient extends BaseScreen {
             readyClient.setText(ready2);
             request.text = "READY";
             client.sendTCP(request);
-            flag = 0;
+
         }
         else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0 || flag == 2 || flag == 9 )){
             readyClient.setText("");

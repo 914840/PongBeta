@@ -57,6 +57,8 @@ public class MultiScreenServer extends BaseScreen {
     private boolean isServerReady= false;
     private boolean isReadySend = false;
 
+    private boolean isFirstBall = true;
+
 
     @Override
     public void initialize() {
@@ -225,10 +227,13 @@ public class MultiScreenServer extends BaseScreen {
         if(flag == -1 && isServerReady) {
             readyServer.setText(ready2);
         }
-        if(isServerReady && isClientReady){
-            readyServer.setText("");
-            readyClient.setText("");
+        if(isServerReady && isClientReady && isFirstBall){
+            readyServer.setVisible(false);
+            readyClient.setVisible(false);
             upDateStartLabel();
+            resetStartLocationLevelScreen(1);
+            isFirstBall = false;
+            flag = 0;
         }
 
 
@@ -261,20 +266,31 @@ public class MultiScreenServer extends BaseScreen {
 
 
         }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && !isReadySend && isPlayerConnected == true){
-            readyServer.setText(ready2);
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && !isReadySend && isPlayerConnected){
+            readyServer.setText(ready2);  // ready
+
             response.text = "READY";
-            server.sendToAllTCP(response);
+            server.sendToAllTCP(response);// wysyła komunikat READT
+
             isServerReady = true;
             isReadySend = true;
 
+            if(isClientReady && isFirstBall){
+                readyServer.setVisible(false);
+                readyClient.setVisible(false);
+                upDateStartLabel();
+                resetStartLocationLevelScreen(1);
+                isFirstBall = false;
+                flag = 0;
+            }
+
         }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  isClientReady && isServerReady && flag == 0 || flag == 2 || flag == 9) {
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  isClientReady && isServerReady && serverServe && (flag == 0 || flag == 2 || flag == 9)) {
             ball.setSpeed(900);
+            serverServe = false;
             readyServer.setText("");
             readyClient.setText("");
 
-//            ball.setMotionAngle(MathUtils.random(-40, 40));
             flag = 1;
             flagStatus = new FlagStatus();
             flagStatus.flag = 1;
@@ -406,7 +422,7 @@ public class MultiScreenServer extends BaseScreen {
             FlagStatus flagStatus = new FlagStatus();
             flagStatus.flag = flag;
             server.sendToAllTCP(flagStatus);
-            resetStartLocationLevelScreen(1);
+            resetStartLocationLevelScreen(0);
             upDateStartLabel();
 
         }
@@ -433,7 +449,7 @@ public class MultiScreenServer extends BaseScreen {
             flagStatus.flag = flag;
             server.sendToAllTCP(flagStatus);
 
-            resetStartLocationLevelScreen(0); // punkt dla Player 1
+            resetStartLocationLevelScreen(1); // punkt dla Player 1
             //upDateStartLabel();
             startLable = new StartLable();
             startLable.isVisibile = true;
@@ -466,20 +482,13 @@ public class MultiScreenServer extends BaseScreen {
     public static class PaddlePosition {
         public float y;
     }
+
     public static class StartLable{
         public boolean isVisibile;
     }
 
-    public void setTcpPort(int tcpPort){
-        this.tcpPort = tcpPort;
-    }
-    public void setUdpPort(int udpPort){
-        this.udpPort = udpPort;
-    }
-    public void setIpHost(String ipHost){
-        this.ipHost = ipHost;
-    }
 
+    // TODO zostawidc
     public void showScoreboard() {
         scoreLabel = new Label("", BaseGame.labelStyle);
         scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
@@ -488,6 +497,7 @@ public class MultiScreenServer extends BaseScreen {
 
     }
 
+    // TODO zostawic
     public void upDateScoreboard() {
 
                 scoreLabelString ="                    " +
@@ -503,6 +513,7 @@ public class MultiScreenServer extends BaseScreen {
         scoreLabel.setText(scoreLabelString);
     }
 
+    // TODO zostawic
     public void showStartLabel() {
         if (PongGameBeta.gameLanguage.equals("PL")) {
             spaceLabel = new Label(" NACISNIJ SPACJE ABY ZACZAC ", BaseGame.labelStyle);
@@ -515,6 +526,8 @@ public class MultiScreenServer extends BaseScreen {
         uiStage.addActor(spaceLabel);
     }
 
+
+    // TODO ZOSTAWIc
     public void upDateStartLabel()
     {
         spaceLabel.setVisible(true);
@@ -577,6 +590,7 @@ public class MultiScreenServer extends BaseScreen {
         }
     }
 
+    //TODO zostawić
     public void resetStartLocationLevelScreen(int i) {
         paddle1.setPosition(30, (mainStage.getHeight() / 2) - 75);
         paddle2.setPosition((mainStage.getWidth() - 60), (mainStage.getHeight() / 2) - 75);

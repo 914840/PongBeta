@@ -266,6 +266,8 @@ public class MultiScreenClient extends BaseScreen {
             readyServer.setText("");
             request.text = "PLAY";
             client.sendTCP(request);
+            isClientServe = false;
+
             flag = 1;
         }
 

@@ -1,5 +1,9 @@
 package game.pong.beta.components;
-
+/**
+ * @Author: Maciej Tymorek
+ * @Project: Pong
+ *
+ */
 public class Player {
     private String nick;
     private Score score;

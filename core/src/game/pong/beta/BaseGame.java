@@ -15,6 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 /**
+ * BaseGame methods to create objects in game
+ * @author Maciej Tymorek
+ * @Project Pong
+ */
+
+/**
  *  Created when program is launched;
  *  manages the screens that appear during the game.
  */

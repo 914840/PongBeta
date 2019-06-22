@@ -1,24 +1,28 @@
 package game.pong.beta.components;
+/**
+ * @Author: Maciej Tymorek
+ * @Project: Pong
+ *
+ */
+
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import game.pong.beta.BaseActor;
 import game.pong.beta.BaseGame;
 import game.pong.beta.BaseScreen;
 import game.pong.beta.PongGameBeta;
-//import game.pong.beta.UDP.UDPClient;
-////import game.pong.beta.network.ServerSocketPong;
-//import game.pong.beta.UDP.UDPServer;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
+import java.net.InetAddress;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class LobbyScreen extends BaseScreen {
 
@@ -32,8 +36,6 @@ public class LobbyScreen extends BaseScreen {
     private Label ip, nick, rules;
     private Label waiting;
     private String ipS;
-
-
 
     private InetAddress IP;
 

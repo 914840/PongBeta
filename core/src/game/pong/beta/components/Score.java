@@ -1,5 +1,9 @@
 package game.pong.beta.components;
-
+/**
+ * @Author: Paweł Kumanowski
+ * @Project: Pong
+ *
+ */
 import game.pong.beta.PongGameBeta;
 
 public class Score {

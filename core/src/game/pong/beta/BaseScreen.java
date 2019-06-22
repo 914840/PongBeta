@@ -14,7 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.io.File;
 import java.util.Scanner;
-
+/**
+ * @author Maciej Tymorek
+ * @Project Pong
+ */
 public abstract class BaseScreen implements Screen, InputProcessor
 {
     protected Stage mainStage;

@@ -1,5 +1,9 @@
 package game.pong.beta.components;
-
+/**
+ * @Author: Paweł Kumanowski
+ * @Project: Pong
+ *
+ */
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

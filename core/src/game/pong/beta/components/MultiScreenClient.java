@@ -1,5 +1,9 @@
 package game.pong.beta.components;
-
+/**
+ * @Author: Maciej Tymorek
+ * @Project: Pong
+ *
+ */
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

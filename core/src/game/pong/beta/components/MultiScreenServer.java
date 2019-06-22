@@ -170,11 +170,12 @@ public class MultiScreenServer extends BaseScreen {
                         }
                         else if(request.text.equals("PLAY")) {
                             if( !serverServe && isServerReady){
-                                ball.setSpeed(900);
+                                ball.setSpeed(1100);
                                 //flag = 1;
-                                ball.setMotionAngle(120);
+                                ball.setMotionAngle(130);
                                 readyClient.setVisible(false);
                                 readyServer.setVisible(false);
+                                spaceLabel.setText("");
                             }
                             else if(serverServe && isServerReady){
                                 readyClient.setVisible(false);
@@ -289,7 +290,8 @@ public class MultiScreenServer extends BaseScreen {
 
         }
         else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  isClientReady && isServerReady && serverServe && (flag == 0 || flag == 2 || flag == 9)) {
-            ball.setSpeed(900);
+            ball.setSpeed(1100);
+            ball.setMotionAngle(30);
             serverServe = false;
             readyServer.setText("");
             readyClient.setText("");
@@ -301,11 +303,30 @@ public class MultiScreenServer extends BaseScreen {
             server.sendToAllTCP(flagStatus);
 
 
+
+
         }
         else if(((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && reConnection == true )){
             server.close();
             System.out.println("Server restart");
             PongGameBeta.setActiveScreen(new MultiScreenServer());
+        }
+
+        else if(flag == 5 )
+        {
+            paddle1.getPlayer().getScore().setPoints(0);
+            paddle2.getPlayer().getScore().setPoints(0);
+            upDateScoreboard();
+            scoreBoard = new ScoreBoard();
+            scoreBoard.scoreBoard = scoreLabelString;
+            server.sendToAllTCP(scoreBoard);
+            flag = 0;
+            flagStatus.flag = 0;
+            server.sendToAllTCP(flagStatus);
+        }
+        else if((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 99))
+        {
+            PongGameBeta.setActiveScreen( new MenuScreen());
         }
 
         /**

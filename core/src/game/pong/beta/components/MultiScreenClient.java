@@ -284,7 +284,7 @@ public class MultiScreenClient extends BaseScreen {
 
         }
 
-        if(isVisible){
+        if (isVisible) {
             upDateStartLabel();
         }
     }

@@ -54,7 +54,8 @@ public class MultiScreenServer extends BaseScreen {
     private boolean isPlayerConnected = false;
     private boolean reConnection = false;
     private boolean serverServe = true;
-    private boolean isServerReady;
+    private boolean isServerReady= false;
+    private boolean isReadySend = false;
 
 
     @Override
@@ -159,6 +160,8 @@ public class MultiScreenServer extends BaseScreen {
                         else if(request.text.equals("READY")) {
                             readyClient.setText(ready2);
                             isClientReady = true;
+                            flag = 0;
+                            upDateStartLabel();
                         }
                         else if(request.text.equals("PLAY")) {
                             if( !serverServe && isServerReady){
@@ -244,12 +247,12 @@ public class MultiScreenServer extends BaseScreen {
 
 
         }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && isPlayerConnected == true){
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && !isReadySend && isPlayerConnected == true){
             readyServer.setText(ready2);
             response.text = "READY";
             server.sendToAllTCP(response);
             isServerReady = true;
-            flag = 0;
+            isReadySend = true;
 
         }
         else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  isClientReady && isServerReady && flag == 0 || flag == 2 || flag == 9) {
@@ -510,37 +513,53 @@ public class MultiScreenServer extends BaseScreen {
             if(flag == 0)
             {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if (flag == 2)
             {
                 spaceLabel.setText(" PUNKT SETOWY! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if( flag == 9)
             {
                 spaceLabel.setText(" PUNKT MECZOWY !!! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if( flag == 99)
             {
                 spaceLabel.setText(" KONIEC GRY ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
         }
         else if(PongGameBeta.gameLanguage.equals("EN") )
         {
-            if(flag == 0)
+            if(flag == 0 && serverServe)
             {
                 spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
-            else if (flag == 2)
+            else if (flag == 2 && serverServe)
             {
                 spaceLabel.setText(" SET POINT! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
-            else if( flag == 9)
+            else if( flag == 9 && serverServe)
             {
                 spaceLabel.setText(" MATCH POINT !!! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if( flag == 99)
             {
                 spaceLabel.setText(" END GAME ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
         }
     }

@@ -59,6 +59,7 @@ public class MultiScreenClient extends BaseScreen {
     private boolean back;
     private boolean isServerReady = false;
     private boolean isClientServe = false;
+    private boolean isReadySend = true;
 
 
     @Override
@@ -171,6 +172,7 @@ public class MultiScreenClient extends BaseScreen {
                         }
                         else if(response.text.equals("YOU SERVE")){
                             startLable.isVisibile = true;
+                            isClientServe = true;
                         }
 
                         else if(response.text.equals("CLOSE")){
@@ -234,10 +236,11 @@ public class MultiScreenClient extends BaseScreen {
             direction.y = -1;
             client.sendTCP(direction);
         }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1) {
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && !isReadySend) {
             readyClient.setText(ready2);
             request.text = "READY";
             client.sendTCP(request);
+            isReadySend = true;
 
         }
         else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0 || flag == 2 || flag == 9 )){
@@ -345,37 +348,53 @@ public class MultiScreenClient extends BaseScreen {
             if(flag == 0)
             {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if (flag == 2)
             {
                 spaceLabel.setText(" PUNKT SETOWY! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if( flag == 9)
             {
                 spaceLabel.setText(" PUNKT MECZOWY !!! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if( flag == 99)
             {
                 spaceLabel.setText(" KONIEC GRY ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
         }
         else if(gameLanguage.equals("EN") )
         {
-            if(flag == 0)
+            if(flag == 0 && isClientServe)
             {
                 spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
-            else if (flag == 2)
+            else if (flag == 2 && isClientServe)
             {
                 spaceLabel.setText(" SET POINT! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
-            else if( flag == 9)
+            else if( flag == 9 && isClientServe)
             {
                 spaceLabel.setText(" MATCH POINT !!! ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
             else if( flag == 99)
             {
                 spaceLabel.setText(" END GAME ");
+                readyServer.setText("");
+                readyClient.setText("");
             }
         }
     }

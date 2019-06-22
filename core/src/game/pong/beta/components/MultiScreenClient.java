@@ -54,7 +54,7 @@ public class MultiScreenClient extends BaseScreen {
     /**
      * Flag codes: -1 - start game, 0 - game ready, 1 - game on, 2 - set point , 5 - new set, 9 - match point, 99 - GameOver
      */
-    private int flag = 0;
+    private int flag = -1;
     private boolean isVisible = false;
     private boolean back;
     private boolean isServerReady = false;
@@ -185,6 +185,14 @@ public class MultiScreenClient extends BaseScreen {
                     if  (object instanceof FlagStatus) {
                         FlagStatus flagStatus = (FlagStatus) object;
                         flag = flagStatus.flag;
+                        if(flagStatus.flag == 1){
+                            spaceLabel.setText("");
+                            readyClient.setText("");
+                            readyServer.setText("");
+                        }
+                        if(flagStatus.flag == 2){
+                            upDateStartLabel();
+                        }
                     }
                     if  (object instanceof  ScoreBoard) {
                         ScoreBoard scoreBoard = (ScoreBoard) object;
@@ -210,17 +218,14 @@ public class MultiScreenClient extends BaseScreen {
             PongGameBeta.setActiveScreen(new MenuScreen());
         }
 
-//        paddlePosition = new PaddlePosition();
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
-//            paddlePosition.y = paddle2.getY();
-//            client.sendTCP(paddlePosition);
+
             direction.y = 1;
             client.sendTCP(direction);
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-//            paddlePosition.y = paddle2.getY();
-//            client.sendTCP(paddlePosition);
+
             direction.y = -1;
             client.sendTCP(direction);
         }

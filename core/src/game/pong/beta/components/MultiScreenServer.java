@@ -162,7 +162,7 @@ public class MultiScreenServer extends BaseScreen {
                         }
                         else if(request.text.equals("PLAY")) {
                             if( !serverServe && isServerReady){
-                                ball.setSpeed(800);
+                                ball.setSpeed(900);
                                 readyClient.setVisible(false);
                                 readyServer.setVisible(false);
                             }
@@ -250,16 +250,19 @@ public class MultiScreenServer extends BaseScreen {
             readyServer.setText(ready2);
             response.text = "READY";
             server.sendToAllTCP(response);
+            isServerReady = true;
             flag = 0;
 
         }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  isClientReady == true && flag == 0 || flag == 2 || flag == 9) {
-            ball.setSpeed(800);
+        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) &&  isClientReady && isServerReady && flag == 0 || flag == 2 || flag == 9) {
+            ball.setSpeed(900);
             readyServer.setText("");
             readyClient.setText("");
 
-//            ball.setMotionAngle(MathUtils.random(-45, 45));
+//            ball.setMotionAngle(MathUtils.random(-40, 40));
             flag = 1;
+            flagStatus.flag = 1;
+            server.sendToAllTCP(flagStatus);
 
         }
         else if(((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && reConnection == true )){

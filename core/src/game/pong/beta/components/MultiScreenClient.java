@@ -170,6 +170,9 @@ public class MultiScreenClient extends BaseScreen {
                         else if(response.text.equals("READY")){
                             readyServer.setText(ready2);
                             isServerReady = true;
+                            if (isClientReady){
+                                flag = 0;
+                            }
                         }
                         else if(response.text.equals("YOU SERVE")){
                             startLable.isVisibile = true;
@@ -233,6 +236,8 @@ public class MultiScreenClient extends BaseScreen {
             readyServer.setText(ready2);
         }
         if(isServerReady && isClientReady){
+            readyServer.setText("");
+            readyClient.setText("");
             upDateStartLabel();
         }
 
@@ -355,7 +360,7 @@ public class MultiScreenClient extends BaseScreen {
     public void upDateStartLabel()
     {
         spaceLabel.setVisible(true);
-        if(isClientServe){
+        if(!isClientServe){
             spaceLabel.setText("");
         }
         else if(gameLanguage.equals("PL"))

@@ -160,9 +160,9 @@ public class MultiScreenServer extends BaseScreen {
                         else if(request.text.equals("READY")) {
                             //readyClient.setText(ready2);
                             isClientReady = true;
-//                            isServerReady = true;
-//                            flag = 0;
-//                            upDateStartLabel();
+                            if(isServerReady){
+                                flag = 0;
+                            }
                         }
                         else if(request.text.equals("PLAY")) {
                             if( !serverServe && isServerReady){
@@ -226,6 +226,8 @@ public class MultiScreenServer extends BaseScreen {
             readyServer.setText(ready2);
         }
         if(isServerReady && isClientReady){
+            readyServer.setText("");
+            readyClient.setText("");
             upDateStartLabel();
         }
 
@@ -516,7 +518,7 @@ public class MultiScreenServer extends BaseScreen {
     public void upDateStartLabel()
     {
         spaceLabel.setVisible(true);
-        if(serverServe){
+        if(!serverServe){
             spaceLabel.setText("");
         }
         else if(PongGameBeta.gameLanguage.equals("PL"))

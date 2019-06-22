@@ -560,6 +560,10 @@ public class MultiScreenServer extends BaseScreen {
                 spaceLabel.setText(" KONIEC GRY - WYGRALES");
                 readyServer.setText("");
                 readyClient.setText("");
+            }else if (flag == 99 && serverServe) {
+                spaceLabel.setText(" KONIEC GRY - PRZEGRALES");
+                readyServer.setText("");
+                readyClient.setText("");
             }
         } else if (gameLanguage.equals("EN")) {
             if (flag == 0 && serverServe) {
@@ -584,6 +588,10 @@ public class MultiScreenServer extends BaseScreen {
                 readyClient.setText("");
             } else if (flag == 99 && !serverServe) {
                 spaceLabel.setText(" END GAME - YOU WIN");
+                readyServer.setText("");
+                readyClient.setText("");
+            } else if (flag == 99 && serverServe) {
+                spaceLabel.setText(" END GAME - YOU LOST");
                 readyServer.setText("");
                 readyClient.setText("");
             }

@@ -330,7 +330,7 @@ public class MultiScreenClient extends BaseScreen {
         } else {
             spaceLabel = new Label(" PRESS  SPACE  TO  START  ", BaseGame.labelStyle);
         }
-        spaceLabel.setPosition(((mainStage.getWidth() / 4)*3) - 100, mainStage.getHeight() / 2);
+        spaceLabel.setPosition(((mainStage.getWidth() / 4)*3) - 200, mainStage.getHeight() / 2);
         spaceLabel.setVisible(false);
 
         uiStage.addActor(spaceLabel);
@@ -400,6 +400,12 @@ public class MultiScreenClient extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             }
+            else if( flag == 99 && isClientServe)
+            {
+                spaceLabel.setText(" KONIEC GRY - PRZEGRALES");
+                readyServer.setText("");
+                readyClient.setText("");
+            }
         }
         else if(gameLanguage.equals("EN") )
         {
@@ -439,7 +445,12 @@ public class MultiScreenClient extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             }
-        }
+            else if( flag == 99 && isClientServe)
+            {
+                spaceLabel.setText(" END GAME - YOU LOST");
+                readyServer.setText("");
+                readyClient.setText("");
+            }
         else if(!isClientServe){
             spaceLabel.setText("");
         }

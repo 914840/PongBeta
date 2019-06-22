@@ -579,8 +579,8 @@ public class MultiScreenServer extends BaseScreen {
                 spaceLabel.setText(" PRESS  SPACE  TO  START  ");
                 readyServer.setText("");
                 readyClient.setText("");
-            } else if (flag == 99) {
-                spaceLabel.setText(" END GAME ");
+            } else if (flag == 99 && !serverServe) {
+                spaceLabel.setText(" END GAME - YOU WIN");
                 readyServer.setText("");
                 readyClient.setText("");
             }

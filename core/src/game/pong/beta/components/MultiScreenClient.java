@@ -433,9 +433,9 @@ public class MultiScreenClient extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 99)
+            else if( flag == 99 && !isClientServe)
             {
-                spaceLabel.setText(" END GAME ");
+                spaceLabel.setText(" END GAME - YOU WIN");
                 readyServer.setText("");
                 readyClient.setText("");
             }

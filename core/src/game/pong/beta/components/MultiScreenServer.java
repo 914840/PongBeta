@@ -16,6 +16,8 @@ import game.pong.beta.PongGameBeta;
 import java.io.IOException;
 import java.net.BindException;
 
+import static game.pong.beta.PongGameBeta.gameLanguage;
+
 public class MultiScreenServer extends BaseScreen {
 
     private BaseActor background;
@@ -528,65 +530,62 @@ public class MultiScreenServer extends BaseScreen {
 
 
     // TODO ZOSTAWIc
-    public void upDateStartLabel()
-    {
+    public void upDateStartLabel() {
         spaceLabel.setVisible(true);
-        if(!serverServe){
-            spaceLabel.setText("");
-        }
-        else if(PongGameBeta.gameLanguage.equals("PL"))
-        {
-            if(flag == 0 && serverServe)
-            {
+        if (gameLanguage.equals("PL")) {
+            if (flag == 0 && serverServe) {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if (flag == 2 && serverServe)
-            {
+            } else if (flag == 2 && !serverServe) {
                 spaceLabel.setText(" PUNKT SETOWY! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 9 && serverServe)
-            {
+            } else if (flag == 2 && serverServe) {
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                readyServer.setText("");
+                readyClient.setText("");
+            } else if (flag == 9 && !serverServe) {
                 spaceLabel.setText(" PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 99 )
-            {
-                spaceLabel.setText(" KONIEC GRY ");
+            } else if (flag == 9 && serverServe) {
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                readyServer.setText("");
+                readyClient.setText("");
+            } else if (flag == 99 && !serverServe) {
+                spaceLabel.setText(" KONIEC GRY - WYGRALES");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-        }
-        else if(PongGameBeta.gameLanguage.equals("EN") )
-        {
-            if(flag == 0 && serverServe)
-            {
+        } else if (gameLanguage.equals("EN")) {
+            if (flag == 0 && serverServe) {
                 spaceLabel.setText(" PRESS  SPACE  TO  START  ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if (flag == 2 && serverServe)
-            {
+            } else if (flag == 2 && !serverServe) {
                 spaceLabel.setText(" SET POINT! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 9 && serverServe)
-            {
+            } else if (flag == 2 && serverServe) {
+                spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+                readyServer.setText("");
+                readyClient.setText("");
+            } else if (flag == 9 && !serverServe) {
                 spaceLabel.setText(" MATCH POINT !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 99)
-            {
+            } else if (flag == 9 && serverServe) {
+                spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+                readyServer.setText("");
+                readyClient.setText("");
+            } else if (flag == 99) {
                 spaceLabel.setText(" END GAME ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
+        } else if (!serverServe) {
+            spaceLabel.setText("");
         }
     }
 

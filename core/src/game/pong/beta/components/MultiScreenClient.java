@@ -362,10 +362,7 @@ public class MultiScreenClient extends BaseScreen {
     public void upDateStartLabel()
     {
         spaceLabel.setVisible(true);
-        if(!isClientServe){
-            spaceLabel.setText("");
-        }
-        else if(gameLanguage.equals("PL"))
+        if(gameLanguage.equals("PL"))
         {
             if(flag == 0 && isClientServe)
             {
@@ -373,21 +370,33 @@ public class MultiScreenClient extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if (flag == 2 && isClientServe)
+            else if (flag == 2 && !isClientServe)
             {
                 spaceLabel.setText(" PUNKT SETOWY! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 9 && isClientServe)
+            else if (flag == 2 && isClientServe)
+            {
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                readyServer.setText("");
+                readyClient.setText("");
+            }
+            else if( flag == 9 && !isClientServe)
             {
                 spaceLabel.setText(" PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 99 && isClientServe)
+            else if( flag == 9 && isClientServe)
             {
-                spaceLabel.setText(" KONIEC GRY ");
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                readyServer.setText("");
+                readyClient.setText("");
+            }
+            else if( flag == 99 && !isClientServe)
+            {
+                spaceLabel.setText(" KONIEC GRY - WYGRALES");
                 readyServer.setText("");
                 readyClient.setText("");
             }
@@ -400,15 +409,27 @@ public class MultiScreenClient extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if (flag == 2 && isClientServe)
+            else if (flag == 2 && isClientServe==false)
             {
                 spaceLabel.setText(" SET POINT! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 9 && isClientServe)
+            else if (flag == 2 && isClientServe)
+            {
+                spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+                readyServer.setText("");
+                readyClient.setText("");
+            }
+            else if( flag == 9 && !isClientServe)
             {
                 spaceLabel.setText(" MATCH POINT !!! ");
+                readyServer.setText("");
+                readyClient.setText("");
+            }
+            else if( flag == 9 && isClientServe)
+            {
+                spaceLabel.setText(" PRESS  SPACE  TO  START  ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
@@ -418,6 +439,9 @@ public class MultiScreenClient extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             }
+        }
+        else if(!isClientServe){
+            spaceLabel.setText("");
         }
     }
 }

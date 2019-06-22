@@ -417,7 +417,7 @@ public class MultiScreenClient extends BaseScreen {
             }
             else if (flag == 2 && isClientServe)
             {
-                spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+                spaceLabel.setText(" PRESS  SPACE  TO  START  /n  SET POINT");
                 readyServer.setText("");
                 readyClient.setText("");
             }
@@ -429,7 +429,7 @@ public class MultiScreenClient extends BaseScreen {
             }
             else if( flag == 9 && isClientServe)
             {
-                spaceLabel.setText(" PRESS  SPACE  TO  START  ");
+                spaceLabel.setText(" PRESS  SPACE  TO  START /n  MATCH POINT !!!  ");
                 readyServer.setText("");
                 readyClient.setText("");
             }

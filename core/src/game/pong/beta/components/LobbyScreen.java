@@ -11,8 +11,14 @@ import game.pong.beta.PongGameBeta;
 //import game.pong.beta.UDP.UDPClient;
 ////import game.pong.beta.network.ServerSocketPong;
 //import game.pong.beta.UDP.UDPServer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LobbyScreen extends BaseScreen {
 
@@ -25,6 +31,7 @@ public class LobbyScreen extends BaseScreen {
     private TextField ipAdress, nickText;
     private Label ip, nick, rules;
     private Label waiting;
+    private String ipS;
 
 
 
@@ -58,12 +65,36 @@ public class LobbyScreen extends BaseScreen {
             waiting = new Label(" WAITING FOR THE PLAYER ", BaseGame.labelStyle);
         }
 
+        String command = null;
+        if(System.getProperty("os.name").equals("Linux"))
+            command = "ifconfig";
+        else
+            command = "ipconfig";
+        Runtime r = Runtime.getRuntime();
+        Process p = null;
         try {
-            IP=InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
+            p = r.exec(command);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        ipAdress = new TextField(IP.toString().substring(3),BaseGame.textFieldStyle);
+        Scanner s = new Scanner(p.getInputStream());
+
+        StringBuilder sb = new StringBuilder("");
+        while(s.hasNext())
+            sb.append(s.next());
+        String ipconfig = sb.toString();
+        Pattern pt = Pattern.compile("192\\.168\\.[0-9]{1,3}\\.[0-9]{1,3}");
+        Matcher mt = pt.matcher(ipconfig);
+        mt.find();
+        ipS = mt.group();
+
+//        try {
+//            IP = InetAddress.getLocalHost();
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
+
+        ipAdress = new TextField(ipS ,BaseGame.textFieldStyle);
         nick = new Label("Nick: ", BaseGame.labelStyle);
         nickText = new TextField(PongGameBeta.nick, BaseGame.textFieldStyle);
 

@@ -426,6 +426,9 @@ public class MultiScreenServer extends BaseScreen {
             server.sendToAllTCP(flagStatus);
             resetStartLocationLevelScreen(0);
             upDateStartLabel();
+            startLable = new StartLable();
+            startLable.isVisibile = true;
+            server.sendToAllTCP(startLable);
 
         }
 
@@ -452,7 +455,7 @@ public class MultiScreenServer extends BaseScreen {
             server.sendToAllTCP(flagStatus);
 
             resetStartLocationLevelScreen(1); // punkt dla Player 1
-            //upDateStartLabel();
+            upDateStartLabel();
             startLable = new StartLable();
             startLable.isVisibile = true;
             server.sendToAllTCP(startLable);
@@ -542,7 +545,7 @@ public class MultiScreenServer extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 2 && serverServe) {
-                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC /n  PUNKT SETOWY!  ");
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC - PUNKT SETOWY!  ");
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 9 && !serverServe) {
@@ -550,7 +553,7 @@ public class MultiScreenServer extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 9 && serverServe) {
-                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC /n  PUNKT MECZOWY !!! ");
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC - PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 99 && !serverServe) {
@@ -568,7 +571,7 @@ public class MultiScreenServer extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 2 && serverServe) {
-                spaceLabel.setText(" PRESS  SPACE  TO  START /n  SET POINT! ");
+                spaceLabel.setText(" PRESS  SPACE  TO  START - SET POINT! ");
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 9 && !serverServe) {
@@ -576,7 +579,7 @@ public class MultiScreenServer extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 9 && serverServe) {
-                spaceLabel.setText(" PRESS  SPACE  TO  START /n MATCH POINT !!!  ");
+                spaceLabel.setText(" PRESS  SPACE  TO  START - MATCH POINT !!!  ");
                 readyServer.setText("");
                 readyClient.setText("");
             } else if (flag == 99 && !serverServe) {

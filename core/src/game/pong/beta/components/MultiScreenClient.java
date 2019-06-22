@@ -284,7 +284,7 @@ public class MultiScreenClient extends BaseScreen {
 
         }
 
-        if(isVisible == true){
+        if(isVisible){
             upDateStartLabel();
         }
     }
@@ -378,7 +378,7 @@ public class MultiScreenClient extends BaseScreen {
             }
             else if (flag == 2 && isClientServe)
             {
-                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC - PUNKT SETOWY!  ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
@@ -390,7 +390,7 @@ public class MultiScreenClient extends BaseScreen {
             }
             else if( flag == 9 && isClientServe)
             {
-                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
+                spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC - PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
@@ -417,7 +417,7 @@ public class MultiScreenClient extends BaseScreen {
             }
             else if (flag == 2 && isClientServe)
             {
-                spaceLabel.setText(" PRESS  SPACE  TO  START  /n  SET POINT");
+                spaceLabel.setText(" PRESS  SPACE  TO  START - SET POINT");
                 readyServer.setText("");
                 readyClient.setText("");
             }
@@ -429,7 +429,7 @@ public class MultiScreenClient extends BaseScreen {
             }
             else if( flag == 9 && isClientServe)
             {
-                spaceLabel.setText(" PRESS  SPACE  TO  START /n  MATCH POINT !!!  ");
+                spaceLabel.setText(" PRESS  SPACE  TO  START - MATCH POINT !!!  ");
                 readyServer.setText("");
                 readyClient.setText("");
             }

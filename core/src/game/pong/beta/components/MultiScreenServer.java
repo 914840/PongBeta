@@ -158,14 +158,16 @@ public class MultiScreenServer extends BaseScreen {
                             paddle2.getPlayer().setNick(request.text.substring(5));
                         }
                         else if(request.text.equals("READY")) {
-                            readyClient.setText(ready2);
+                            //readyClient.setText(ready2);
                             isClientReady = true;
-                            flag = 0;
-                            upDateStartLabel();
+//                            isServerReady = true;
+//                            flag = 0;
+//                            upDateStartLabel();
                         }
                         else if(request.text.equals("PLAY")) {
                             if( !serverServe && isServerReady){
                                 ball.setSpeed(900);
+                                flag = 1;
                                 readyClient.setVisible(false);
                                 readyServer.setVisible(false);
                             }
@@ -217,6 +219,16 @@ public class MultiScreenServer extends BaseScreen {
     }
     @Override
     public void update(float dt) {
+        if(flag == -1 && isClientReady){
+            readyClient.setText(ready2);
+        }
+        if(flag == -1 && isServerReady) {
+            readyServer.setText(ready2);
+        }
+        if(isServerReady && isClientReady){
+            upDateStartLabel();
+        }
+
 
         ballPosition.x = ball.getX();
         ballPosition.y = ball.getY();
@@ -382,9 +394,8 @@ public class MultiScreenServer extends BaseScreen {
             serverServe = true;
 
             upDateScoreboard();
-            ball.setSpeed(0);
-            ball.setPosition((mainStage.getWidth()/4) - 70, mainStage.getHeight()/2);
-            ball.setMotionAngle(35);
+
+
 
             ScoreBoard scoreBoard = new ScoreBoard();
             scoreBoard.scoreBoard = scoreLabelString;
@@ -393,7 +404,7 @@ public class MultiScreenServer extends BaseScreen {
             FlagStatus flagStatus = new FlagStatus();
             flagStatus.flag = flag;
             server.sendToAllTCP(flagStatus);
-            //resetStartLocationLevelScreen(1); // punkt dla Player 2
+            resetStartLocationLevelScreen(1);
             upDateStartLabel();
 
         }
@@ -411,9 +422,6 @@ public class MultiScreenServer extends BaseScreen {
             server.sendToAllTCP(response);
 
             upDateScoreboard();
-            ball.setSpeed(0);
-            ball.setPosition((mainStage.getWidth()/4)*3 + 50, mainStage.getHeight()/2);
-            ball.setMotionAngle(ball.getMotionAngle()*(-1));
 
             ScoreBoard scoreBoard = new ScoreBoard();
             scoreBoard.scoreBoard = scoreLabelString;
@@ -423,11 +431,11 @@ public class MultiScreenServer extends BaseScreen {
             flagStatus.flag = flag;
             server.sendToAllTCP(flagStatus);
 
-            //resetStartLocationLevelScreen(0); // punkt dla Player 1
+            resetStartLocationLevelScreen(0); // punkt dla Player 1
             //upDateStartLabel();
-//            startLable = new StartLable();
-//            startLable.isVisibile = true;
-//            server.sendToAllTCP(startLable);
+            startLable = new StartLable();
+            startLable.isVisibile = true;
+            server.sendToAllTCP(startLable);
 
 
         }
@@ -510,25 +518,25 @@ public class MultiScreenServer extends BaseScreen {
         spaceLabel.setVisible(true);
         if(PongGameBeta.gameLanguage.equals("PL"))
         {
-            if(flag == 0)
+            if(flag == 0 && serverServe)
             {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if (flag == 2)
+            else if (flag == 2 && serverServe)
             {
                 spaceLabel.setText(" PUNKT SETOWY! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 9)
+            else if( flag == 9 && serverServe)
             {
                 spaceLabel.setText(" PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 99)
+            else if( flag == 99 )
             {
                 spaceLabel.setText(" KONIEC GRY ");
                 readyServer.setText("");
@@ -561,6 +569,23 @@ public class MultiScreenServer extends BaseScreen {
                 readyServer.setText("");
                 readyClient.setText("");
             }
+        }
+    }
+
+    public void resetStartLocationLevelScreen(int i) {
+        paddle1.setPosition(30, (mainStage.getHeight() / 2) - 75);
+        paddle2.setPosition((mainStage.getWidth() - 60), (mainStage.getHeight() / 2) - 75);
+        ball.setSpeed(0);
+        //flag = 0;
+
+
+        if (i == 1) {
+            ball.setPosition(mainStage.getWidth() - 100, (mainStage.getHeight() / 2) - 16);
+            ball.setMotionAngle(45);
+        }
+        if (i == 0) {
+            ball.setPosition(100, (mainStage.getHeight() / 2) - 16);
+            ball.setMotionAngle(135);
         }
     }
 }

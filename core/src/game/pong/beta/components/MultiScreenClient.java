@@ -58,8 +58,9 @@ public class MultiScreenClient extends BaseScreen {
     private boolean isVisible = false;
     private boolean back;
     private boolean isServerReady = false;
+    private boolean isClientReady = false;
     private boolean isClientServe = false;
-    private boolean isReadySend = true;
+    private boolean isReadySend = false;
 
 
     @Override
@@ -225,6 +226,16 @@ public class MultiScreenClient extends BaseScreen {
             PongGameBeta.setActiveScreen(new MenuScreen());
         }
 
+        if(flag == -1 && isClientReady){
+            readyClient.setText(ready2);
+        }
+        if(flag == -1 && isServerReady) {
+            readyServer.setText(ready2);
+        }
+        if(isServerReady && isClientReady){
+            upDateStartLabel();
+        }
+
         direction = new PaddleDirection();
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
 
@@ -241,6 +252,7 @@ public class MultiScreenClient extends BaseScreen {
             request.text = "READY";
             client.sendTCP(request);
             isReadySend = true;
+            isClientReady = true;
 
         }
         else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 0 || flag == 2 || flag == 9 )){
@@ -342,28 +354,28 @@ public class MultiScreenClient extends BaseScreen {
 
     public void upDateStartLabel()
     {
-
+        spaceLabel.setVisible(true);
         if(gameLanguage.equals("PL"))
         {
-            if(flag == 0)
+            if(flag == 0 && isClientServe)
             {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if (flag == 2)
+            else if (flag == 2 && isClientServe)
             {
                 spaceLabel.setText(" PUNKT SETOWY! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 9)
+            else if( flag == 9 && isClientServe)
             {
                 spaceLabel.setText(" PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-            else if( flag == 99)
+            else if( flag == 99 && isClientServe)
             {
                 spaceLabel.setText(" KONIEC GRY ");
                 readyServer.setText("");

@@ -261,6 +261,7 @@ public class MultiScreenServer extends BaseScreen {
 
 //            ball.setMotionAngle(MathUtils.random(-40, 40));
             flag = 1;
+            flagStatus = new FlagStatus();
             flagStatus.flag = 1;
             server.sendToAllTCP(flagStatus);
 
@@ -404,11 +405,14 @@ public class MultiScreenServer extends BaseScreen {
             flag = paddle1.getPlayer().getScore().addOnePoint();
 
             serverServe = false;
+            response = new SomeResponse();
+            response.text = "YOU SERVE";
+            server.sendToAllTCP(response);
 
             upDateScoreboard();
             ball.setSpeed(0);
             ball.setPosition((mainStage.getWidth()/4)*3 + 50, mainStage.getHeight()/2);
-            ball.setMotionAngle(125);
+            ball.setMotionAngle(ball.getMotionAngle()*(-1));
 
             ScoreBoard scoreBoard = new ScoreBoard();
             scoreBoard.scoreBoard = scoreLabelString;

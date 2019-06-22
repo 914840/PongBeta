@@ -58,6 +58,7 @@ public class MultiScreenClient extends BaseScreen {
     private boolean isVisible = false;
     private boolean back;
     private boolean isServerReady = false;
+    private boolean isClientServe = false;
 
 
     @Override
@@ -168,6 +169,10 @@ public class MultiScreenClient extends BaseScreen {
                             readyServer.setText(ready2);
                             isServerReady = true;
                         }
+                        else if(response.text.equals("YOU SERVE")){
+                            startLable.isVisibile = true;
+                        }
+
                         else if(response.text.equals("CLOSE")){
                             client.close();
                             back = true;

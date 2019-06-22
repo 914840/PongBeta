@@ -355,7 +355,10 @@ public class MultiScreenClient extends BaseScreen {
     public void upDateStartLabel()
     {
         spaceLabel.setVisible(true);
-        if(gameLanguage.equals("PL"))
+        if(isClientServe){
+            spaceLabel.setText("");
+        }
+        else if(gameLanguage.equals("PL"))
         {
             if(flag == 0 && isClientServe)
             {

@@ -516,7 +516,10 @@ public class MultiScreenServer extends BaseScreen {
     public void upDateStartLabel()
     {
         spaceLabel.setVisible(true);
-        if(PongGameBeta.gameLanguage.equals("PL"))
+        if(serverServe){
+            spaceLabel.setText("");
+        }
+        else if(PongGameBeta.gameLanguage.equals("PL"))
         {
             if(flag == 0 && serverServe)
             {

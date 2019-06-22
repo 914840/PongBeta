@@ -40,7 +40,7 @@ public class MultiScreenServer extends BaseScreen {
     private SomeRequest request;
     private SomeResponse response;
     private PaddleDirection direction;
-    private BallPosition ballPosition;
+    private BallPosition ballPosition = new BallPosition();
     private FlagStatus flagStatus;
     private ScoreBoard scoreBoard;
     private PaddlePosition paddlePosition;
@@ -172,8 +172,6 @@ public class MultiScreenServer extends BaseScreen {
                             else if(!serverServe && !isServerReady){
 
                             }
-
-
                         }
                         else if(request.text.equals("EXIT")) {
                             readyClient.setText(exit);
@@ -216,7 +214,7 @@ public class MultiScreenServer extends BaseScreen {
     }
     @Override
     public void update(float dt) {
-        ballPosition = new BallPosition();
+
         ballPosition.x = ball.getX();
         ballPosition.y = ball.getY();
         server.sendToAllTCP(ballPosition);
@@ -424,9 +422,9 @@ public class MultiScreenServer extends BaseScreen {
 
             //resetStartLocationLevelScreen(0); // punkt dla Player 1
             //upDateStartLabel();
-            startLable = new StartLable();
-            startLable.isVisibile = true;
-            server.sendToAllTCP(startLable);
+//            startLable = new StartLable();
+//            startLable.isVisibile = true;
+//            server.sendToAllTCP(startLable);
 
 
         }

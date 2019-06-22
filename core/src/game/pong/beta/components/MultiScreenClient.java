@@ -407,50 +407,37 @@ public class MultiScreenClient extends BaseScreen {
                 readyClient.setText("");
             }
         }
-        else if(gameLanguage.equals("EN") )
-        {
-            if(flag == 0 && isClientServe)
-            {
+        else if(gameLanguage.equals("EN") ) {
+            if (flag == 0 && isClientServe) {
                 spaceLabel.setText(" PRESS  SPACE  TO  START  ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if (flag == 2 && isClientServe==false)
-            {
+            } else if (flag == 2 && isClientServe == false) {
                 spaceLabel.setText(" SET POINT! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if (flag == 2 && isClientServe)
-            {
+            } else if (flag == 2 && isClientServe) {
                 spaceLabel.setText(" PRESS  SPACE  TO  START - SET POINT");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 9 && !isClientServe)
-            {
+            } else if (flag == 9 && !isClientServe) {
                 spaceLabel.setText(" MATCH POINT !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 9 && isClientServe)
-            {
+            } else if (flag == 9 && isClientServe) {
                 spaceLabel.setText(" PRESS  SPACE  TO  START - MATCH POINT !!!  ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 99 && !isClientServe)
-            {
+            } else if (flag == 99 && !isClientServe) {
                 spaceLabel.setText(" END GAME - YOU WIN");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 99 && isClientServe)
-            {
+            } else if (flag == 99 && isClientServe) {
                 spaceLabel.setText(" END GAME - YOU LOST");
                 readyServer.setText("");
                 readyClient.setText("");
             }
+        }
         else if(!isClientServe){
             spaceLabel.setText("");
         }

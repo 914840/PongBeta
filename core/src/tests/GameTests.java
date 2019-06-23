@@ -1,6 +1,7 @@
 package tests;
 
-import game.pong.beta.components.*;
+import game.pong.beta.components.Player;
+import game.pong.beta.components.Score;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

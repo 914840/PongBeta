@@ -10,8 +10,7 @@ buildscript {
         google()
     }
     dependencies {
-        
-
+        classpath 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     }
 }
 
@@ -49,6 +48,7 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.esotericsoftware:kryonet:2.22.0-RC1"
+
         
     }
 }
@@ -60,7 +60,9 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        
+        compile "com.esotericsoftware:kryonet:2.22.0-RC1"
+        compile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+        compile 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     }
 }
 

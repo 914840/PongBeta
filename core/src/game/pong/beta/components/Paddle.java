@@ -1,14 +1,15 @@
 package game.pong.beta.components;
-/**
- * @Author: Maciej Tymorek
- * @Project: Pong
- *
- */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import game.pong.beta.BaseActor;
+import game.pong.beta.baseGame.BaseActor;
 
+/**
+ * @Author: Paweł Kumanowski
+ * @Project: Pong
+ *
+ */
 public class Paddle extends BaseActor {
 
     private Player player;

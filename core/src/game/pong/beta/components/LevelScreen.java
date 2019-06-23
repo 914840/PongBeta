@@ -1,20 +1,20 @@
 package game.pong.beta.components;
+
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import game.pong.beta.baseGame.BaseActor;
+import game.pong.beta.baseGame.BaseGame;
+import game.pong.beta.baseGame.BaseScreen;
+import game.pong.beta.baseGame.PongGameBeta;
+
 /**
  * @Author: Maciej Tymorek
  * @Project: Pong
  *
  */
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.compression.lzma.Base;
-import game.pong.beta.BaseActor;
-import game.pong.beta.BaseGame;
-import game.pong.beta.BaseScreen;
-import game.pong.beta.PongGameBeta;
 
 public class LevelScreen extends BaseScreen{
 
@@ -30,6 +30,9 @@ public class LevelScreen extends BaseScreen{
     private int flag = 0;
 
 
+    /**
+     * Method which initializes default look of the game screen with two paddles, scoreboard and ball.
+     */
     @Override
     public void initialize() {
 
@@ -71,6 +74,13 @@ public class LevelScreen extends BaseScreen{
 
     }
 
+    /**
+     * Mothod is used for updating the the game state.
+     * When Space is pressed the game starts
+     * When ESC is pressed the game stops and returns to main menu
+     * Here we also have description of game logic conditions - After ball crosses right or lest border appropriate method is called
+     * @param dt
+     */
     @Override
     public void update(float dt)
     {
@@ -270,8 +280,10 @@ public class LevelScreen extends BaseScreen{
         );
     }
 
-    // TODO metoda do resetowania ustawień sceny. - po dotknięciu do ściany lewej lub prawej wynik sie zmienia i
-    //      resetują ustawienia piłki, paletek.
+    /**
+     * Method used for resetting the scene, after ball touches the right or left border, the result changes and position of paddles and the ball are reset.
+     * @param i (used for setting a flag)
+     */
     public void resetStartLocationLevelScreen(int i)
     {
         paddle1.setPosition(30, (mainStage.getHeight()/2)- 75);
@@ -291,6 +303,10 @@ public class LevelScreen extends BaseScreen{
 
     }
 
+    /**
+     * Method used for displaying default labels when Player enters main game stage.
+     */
+
     public void showStartLabel() {
         if (PongGameBeta.gameLanguage.equals("PL")) {
             spaceLabel = new Label(" NACISNIJ SPACJE ABY ZACZAC ", BaseGame.labelStyle);
@@ -309,6 +325,10 @@ public class LevelScreen extends BaseScreen{
 
 
     }
+
+    /**
+     * Method used for changing the message strings of the Start label depending of the language selected.
+     */
     public void upDateStartLabel()
     {
         if(PongGameBeta.gameLanguage.equals("PL"))
@@ -350,6 +370,11 @@ public class LevelScreen extends BaseScreen{
             }
         }
     }
+
+    /**
+     * Helper method
+     * @param flag (parameter used for conditions selection)
+     */
 
     public void setFlag(int flag)
     {

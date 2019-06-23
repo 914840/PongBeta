@@ -2,15 +2,15 @@ package game.pong.beta.components;
 /**
  * @Author: Paweł Kumanowski
  * @Project: Pong
- *
+ * Class which handles the the game score and sets setting
  */
-import game.pong.beta.PongGameBeta;
+import game.pong.beta.baseGame.PongGameBeta;
 
 public class Score {
     private int sets;
     private int points;
 
-    Score(int sets, int points){
+    public Score(int sets, int points){
         this.sets = sets;
         this.points = points;
     }
@@ -34,6 +34,10 @@ public class Score {
         this.points = points;
     }
 
+    /**
+     * Method for adding points
+     * @return
+     */
     public int addOnePoint(){
         this.points += 1;
         int code;
@@ -60,14 +64,18 @@ public class Score {
         return code;
     }
 
+    /**
+     * Method for adding sets.
+     * @return
+     */
     private int addOneSet() {
         this.sets += 1;
         if(this.sets == PongGameBeta.sets){
-            return 99;          // kod konca rozgrywki.
+            return 99;          // code for the end of the game
         }
         else {
-            return 5;           // kod resetu punktów u drugiego gracza
-                                // nowy set
+            return 5;           // code for resseting the points for the second player
+                                // new set
         }
     }
 }

@@ -1,9 +1,5 @@
 package game.pong.beta.components;
-/**
- * @Author: Maciej Tymorek
- * @Project: Pong
- *
- */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -12,15 +8,21 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.KryoNetException;
 import com.esotericsoftware.kryonet.Listener;
-import game.pong.beta.BaseActor;
-import game.pong.beta.BaseGame;
-import game.pong.beta.BaseScreen;
-import game.pong.beta.PongGameBeta;
+import game.pong.beta.baseGame.BaseActor;
+import game.pong.beta.baseGame.BaseGame;
+import game.pong.beta.baseGame.BaseScreen;
+import game.pong.beta.baseGame.PongGameBeta;
 
 import java.io.IOException;
 
-import static game.pong.beta.PongGameBeta.*;
+import static game.pong.beta.baseGame.PongGameBeta.*;
 
+
+/**
+ * @Author: Maciej Tymorek
+ * @Project: Pong
+ * Class for setting up screen for Multi-player session Client
+ */
 public class MultiScreenClient extends BaseScreen {
 
     MultiScreenClient(String ipHost){
@@ -153,7 +155,7 @@ public class MultiScreenClient extends BaseScreen {
             kryo.register(StartLable.class);
 
 
-            // Nawiązanie z serverem podstawowej łączności
+            // Reaching basic connectivity with the server
             request = new SomeRequest();
             request.text = "INIT";
             client.sendTCP(request);
@@ -277,7 +279,7 @@ public class MultiScreenClient extends BaseScreen {
 
 
 
-        // powrót do menu, przerwanie gry.
+        // return to menu, ending the game.
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
             request.text="EXIT";

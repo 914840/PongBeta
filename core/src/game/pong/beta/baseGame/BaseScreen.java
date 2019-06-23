@@ -1,4 +1,4 @@
-package game.pong.beta;
+package game.pong.beta.baseGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -12,11 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import java.io.File;
-import java.util.Scanner;
 /**
  * @author Maciej Tymorek
  * @Project Pong
+ * Class is used as a template for other game screens.
  */
 public abstract class BaseScreen implements Screen, InputProcessor
 {
@@ -114,10 +113,6 @@ public abstract class BaseScreen implements Screen, InputProcessor
 
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {  return false;  }
-
-    /*****************************************************
-     * Metody własne
-     */
 
     /**
      * this method sets background for screen

@@ -1,9 +1,10 @@
-package game.pong.beta;
+package game.pong.beta.baseGame;
 
 import game.pong.beta.components.MenuScreen;
 /**
  * @author Maciej Tymorek
  * @Project Pong
+ * Class which sets default values for the game such as language, number of points and sets and default nick of the Player.
  */
 
 public class PongGameBeta extends BaseGame

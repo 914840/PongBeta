@@ -1,9 +1,5 @@
 package game.pong.beta.components;
-/**
- * @Author: Maciej Tymorek
- * @Project: Pong
- *
- */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,16 +8,20 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import game.pong.beta.BaseActor;
-import game.pong.beta.BaseGame;
-import game.pong.beta.BaseScreen;
-import game.pong.beta.PongGameBeta;
+import game.pong.beta.baseGame.BaseActor;
+import game.pong.beta.baseGame.BaseGame;
+import game.pong.beta.baseGame.BaseScreen;
+import game.pong.beta.baseGame.PongGameBeta;
 
 import java.io.IOException;
 import java.net.BindException;
 
-import static game.pong.beta.PongGameBeta.gameLanguage;
-
+import static game.pong.beta.baseGame.PongGameBeta.gameLanguage;
+/**
+ * @Author: Maciej Tymorek
+ * @Project: Pong
+ *
+ */
 public class MultiScreenServer extends BaseScreen {
 
     private BaseActor background;

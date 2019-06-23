@@ -1,8 +1,9 @@
 package game.pong.beta.components;
+
 /**
  * @Author: Maciej Tymorek
  * @Project: Pong
- *
+ * Player class with regular getter and setter methods.
  */
 public class Player {
     private String nick;
@@ -10,47 +11,44 @@ public class Player {
     private boolean ai;
     private boolean online;
 
-    Player(String nick, boolean ai, boolean online)
-    {
+    Player(String nick, boolean ai, boolean online) {
         this.nick = nick;
-        this.score = new Score(0,0);
+        this.score = new Score(0, 0);
         this.ai = ai;
         this.online = online;
     }
 
-    Player(String nick)
-    {
+    public Player(String nick) {
         this.nick = nick;
-        this.score = new Score(0,0);
+        this.score = new Score(0, 0);
         this.ai = false;
     }
 
-    public String getNick()
-    {
+    public String getNick() {
         return this.nick;
     }
 
-    public void setNick(String nick)
-    {
+    public void setNick(String nick) {
         this.nick = nick;
     }
 
-    public Score getScore()
-    {
+    public Score getScore() {
         return this.score;
     }
 
-    public boolean isAi()
-    {
+    public boolean isAi() {
         return this.ai;
     }
 
-    public void setAi(boolean ai)
-    {
+    public void setAi(boolean ai) {
         this.ai = ai;
     }
 
-    public boolean isOnline() { return this.online; }
+    public boolean isOnline() {
+        return this.online;
+    }
 
-    public void setOnline(boolean online){ this.online = online; }
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 }

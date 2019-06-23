@@ -1,20 +1,21 @@
 package game.pong.beta.components;
-/**
- * @Author: Paweł Kumanowski
- * @Project: Pong
- *
- */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import game.pong.beta.BaseActor;
-import game.pong.beta.BaseGame;
-import game.pong.beta.BaseScreen;
-import game.pong.beta.PongGameBeta;
+import game.pong.beta.baseGame.BaseActor;
+import game.pong.beta.baseGame.BaseGame;
+import game.pong.beta.baseGame.BaseScreen;
+import game.pong.beta.baseGame.PongGameBeta;
 
+/**
+ * @Author: Paweł Kumanowski
+ * @Project: Pong
+ * Class sets the default values and looks of the Setting screen.
+ */
 public class SettingsScreen extends BaseScreen {
 
     private BaseActor background;
@@ -30,6 +31,9 @@ public class SettingsScreen extends BaseScreen {
     private BaseActor labelLanguage;
     private TextButton backButton;
 
+    /**
+     * Method used for initialization of the Settings screen which sets buttons look, and listeners.
+     */
     @Override
     public void initialize() {
 

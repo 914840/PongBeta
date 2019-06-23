@@ -1,4 +1,4 @@
-package game.pong.beta;
+package game.pong.beta.baseGame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 /**
@@ -51,7 +50,7 @@ public abstract class BaseGame extends Game
      */
     public void create()
     {
-        // prepare for multiple classes/stages/actors to receive discrete input
+        // prepare for multiple classes/stages/baseGame to receive discrete input
         InputMultiplexer im = new InputMultiplexer();
         Gdx.input.setInputProcessor( im );
 

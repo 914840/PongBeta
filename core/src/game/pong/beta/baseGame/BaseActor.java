@@ -1,4 +1,4 @@
-package game.pong.beta;
+package game.pong.beta.baseGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -40,7 +40,7 @@ public class BaseActor extends Actor
 
     private Polygon boundaryPolygon;
 
-    // stores size of game world for all actors
+    // stores size of game world for all baseGame
     public static Rectangle worldBounds;
 
     public BaseActor(float x, float y, Stage s)

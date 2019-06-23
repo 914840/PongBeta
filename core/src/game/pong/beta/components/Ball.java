@@ -1,21 +1,21 @@
 package game.pong.beta.components;
-/**
- * @Author: Maciej Tymorek
- * @Project: Pong
- *
- */
 
-import com.badlogic.gdx.math.Vector2;
+
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import game.pong.beta.BaseActor;
+import game.pong.beta.baseGame.BaseActor;
+
+/**
+ * @Author: Paweł Kumanowski
+ * @Project: Pong
+ * Class used for initializing Ball default settings as speed and texture.
+ */
 
 public class Ball extends BaseActor {
 
     private float speed;
 
-    Ball(float x, float y, Stage s)
-    {
-        super(x,y,s);
+    Ball(float x, float y, Stage s) {
+        super(x, y, s);
         loadTexture("ball.png");
 
 
@@ -29,7 +29,7 @@ public class Ball extends BaseActor {
         super.act(dt);
 
         applyPhysics(dt);
-        setAnimationPaused( !isMoving() );
+        setAnimationPaused(!isMoving());
         boundToWorld();
 
     }

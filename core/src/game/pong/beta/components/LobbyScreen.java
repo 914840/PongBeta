@@ -1,9 +1,5 @@
 package game.pong.beta.components;
-/**
- * @Author: Maciej Tymorek
- * @Project: Pong
- *
- */
+
 
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,10 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import game.pong.beta.BaseActor;
-import game.pong.beta.BaseGame;
-import game.pong.beta.BaseScreen;
-import game.pong.beta.PongGameBeta;
+import game.pong.beta.baseGame.BaseActor;
+import game.pong.beta.baseGame.BaseGame;
+import game.pong.beta.baseGame.BaseScreen;
+import game.pong.beta.baseGame.PongGameBeta;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -23,6 +19,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @Author: Maciej Tymorek
+ * @Project: Pong
+ * Class which sets up the Multi-player Lobby Screen
+ */
 
 public class LobbyScreen extends BaseScreen {
 
@@ -39,6 +40,10 @@ public class LobbyScreen extends BaseScreen {
 
     private InetAddress IP;
 
+    /**
+     * Method which initializes Lobby screen, by setting background and button pictures and their string messages. <br>
+     * Method also adds listeners to the buttons created.
+     */
     @Override
     public void initialize() {
 

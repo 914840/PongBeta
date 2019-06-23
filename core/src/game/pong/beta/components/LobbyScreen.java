@@ -73,7 +73,7 @@ public class LobbyScreen extends BaseScreen {
         }
 
         String command = null;
-        if(System.getProperty("os.name").equals("Linux"))
+        if(System.getProperty("os.name").equals("Mac OS X"))
             command = "ifconfig";
         else
             command = "ipconfig";

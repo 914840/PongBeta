@@ -1,10 +1,14 @@
 package tests;
 
-import game.pong.beta.components.Player;
-import game.pong.beta.components.Score;
+import game.pong.beta.components.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * @author Paweł Kumanowski
+ * Class for testing Player and Score variables
+ */
 
 public class GameTests {
 

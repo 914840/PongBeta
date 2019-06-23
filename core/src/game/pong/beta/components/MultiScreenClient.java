@@ -8,9 +8,9 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.KryoNetException;
 import com.esotericsoftware.kryonet.Listener;
-import game.pong.beta.baseGame.BaseActor;
-import game.pong.beta.baseGame.BaseGame;
-import game.pong.beta.baseGame.BaseScreen;
+import game.pong.beta.baseGame.DefaultActor;
+import game.pong.beta.baseGame.DefaultGame;
+import game.pong.beta.baseGame.DefaultScreen;
 import game.pong.beta.baseGame.PongGameBeta;
 
 import java.io.IOException;
@@ -19,20 +19,19 @@ import static game.pong.beta.baseGame.PongGameBeta.*;
 
 
 /**
- * @Author: Maciej Tymorek
- * @Project: Pong
+ * @author Maciej Tymorek
  * Class for setting up screen for Multi-player session Client
  */
-public class MultiScreenClient extends BaseScreen {
+public class MultiScreenClient extends DefaultScreen {
 
-    MultiScreenClient(String ipHost){
+    MultiScreenClient(String ipHost) {
         this.ipHost = ipHost;
     }
 
-    private BaseActor background;
+    private DefaultActor background;
     private Paddle paddle1, paddle2;
     private Ball ball;
-    private BaseActor borderUp, borderDown,endGameBorderLeft, endGameBorderRight, winMessage, gameOverMessage;
+    private DefaultActor borderUp, borderDown, endGameBorderLeft, endGameBorderRight, winMessage, gameOverMessage;
     private Label scoreLabel, spaceLabel;
 
     private Label waiting;
@@ -50,7 +49,6 @@ public class MultiScreenClient extends BaseScreen {
     private String score;
     private PaddlePosition paddlePosition;
     private StartLable startLable;
-
 
 
     private String ipHost;
@@ -77,196 +75,190 @@ public class MultiScreenClient extends BaseScreen {
 
 
         // method to set not-solid border of screen
-        BaseActor.setWorldBounds(background);
+        DefaultActor.setWorldBounds(background);
 
         // creating a solid upper border
-        borderUp = new BaseActor(0, (mainStage.getHeight() - 10), mainStage);
+        borderUp = new DefaultActor(0, (mainStage.getHeight() - 10), mainStage);
         borderUp.loadTexture("border1600x10.png");
 
         // creating a solid lower border
-        borderDown = new BaseActor(0, 0, mainStage);
+        borderDown = new DefaultActor(0, 0, mainStage);
         borderDown.loadTexture("border1600x10.png");
 
         // creating a solid left border
-        endGameBorderLeft = new BaseActor(0, 0, mainStage);
+        endGameBorderLeft = new DefaultActor(0, 0, mainStage);
         endGameBorderLeft.loadTexture("border2x900endGame.png");
 
         // creating a solid right border
-        endGameBorderRight = new BaseActor(mainStage.getWidth() - 2, 0, mainStage);
+        endGameBorderRight = new DefaultActor(mainStage.getWidth() - 2, 0, mainStage);
         endGameBorderRight.loadTexture("border2x900endGame.png");
-        if(gameLanguage.equals("PL"))
-        {
-            waiting = new Label( " OCZEKIWANIE NA SERVER ", BaseGame.labelStyle);
-            readyClient = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
-            readyServer = new Label( "GOTOWY?  NACISNIJ SPACJE", BaseGame.labelStyle);
+        if (gameLanguage.equals("PL")) {
+            waiting = new Label(" OCZEKIWANIE NA SERVER ", DefaultGame.labelStyle);
+            readyClient = new Label("GOTOWY?  NACISNIJ SPACJE", DefaultGame.labelStyle);
+            readyServer = new Label("GOTOWY?  NACISNIJ SPACJE", DefaultGame.labelStyle);
             ready2 = "GOTOWY!";
-        }
-        else
-        {
-            waiting = new Label(" WAITING FOR THE SERVER ", BaseGame.labelStyle);
-            readyClient = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
-            readyServer = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
-            readyServer = new Label( "READY?  PRESS SPACE", BaseGame.labelStyle);
+        } else {
+            waiting = new Label(" WAITING FOR THE SERVER ", DefaultGame.labelStyle);
+            readyClient = new Label("READY?  PRESS SPACE", DefaultGame.labelStyle);
+            readyServer = new Label("READY?  PRESS SPACE", DefaultGame.labelStyle);
+            readyServer = new Label("READY?  PRESS SPACE", DefaultGame.labelStyle);
             ready2 = "READY!";
         }
 
-        waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
-        readyClient.setPosition(((mainStage.getWidth()/4)*3) - 100, mainStage.getHeight()/2);
+        waiting.setPosition(mainStage.getWidth() / 2 - 200, mainStage.getHeight() / 2);
+        readyClient.setPosition(((mainStage.getWidth() / 4) * 3) - 100, mainStage.getHeight() / 2);
         readyClient.setVisible(false);
-        readyServer.setPosition(mainStage.getWidth()/4 - 100, mainStage.getHeight()/2);
+        readyServer.setPosition(mainStage.getWidth() / 4 - 100, mainStage.getHeight() / 2);
         readyServer.setVisible(false);
 
 
         // creating a paddle 1(player) & 2(cpu)
-        paddle1 = new Paddle(30, (mainStage.getHeight() / 2) - 100, mainStage, new Player(" ", false,true));
-        paddle2 = new Paddle( (mainStage.getWidth() - 60), (mainStage.getHeight()/2)-100, mainStage, new Player(nick));
+        paddle1 = new Paddle(30, (mainStage.getHeight() / 2) - 100, mainStage, new Player(" ", false, true));
+        paddle2 = new Paddle((mainStage.getWidth() - 60), (mainStage.getHeight() / 2) - 100, mainStage, new Player(nick));
 
-        ball = new Ball((mainStage.getWidth()/2)-16, (mainStage.getHeight()/2)-16,mainStage);
+        ball = new Ball((mainStage.getWidth() / 2) - 16, (mainStage.getHeight() / 2) - 16, mainStage);
         try {
             client = new Client();
             client.start();
-        }
-        catch (KryoNetException e){
+        } catch (KryoNetException e) {
             setActiveScreen(new MenuScreen());
         }
-            mainStage.addActor(waiting);
-            mainStage.addActor(readyClient);
-            mainStage.addActor(readyServer);
-            try {
-                client.connect(5000, PongGameBeta.ipHost, 54345, 54789);
-            } catch (KryoNetException e) {
-                System.out.println("Exception: KryoNet in MultiClient");
-            } catch (IOException en){
-                //setActiveScreen(new MenuScreen());
-                System.out.println("Exception: IOException in MultiClient");
-                back = true;
-                //setActiveScreen(new MenuScreen());
+        mainStage.addActor(waiting);
+        mainStage.addActor(readyClient);
+        mainStage.addActor(readyServer);
+        try {
+            client.connect(5000, PongGameBeta.ipHost, 54345, 54789);
+        } catch (KryoNetException e) {
+            System.out.println("Exception: KryoNet in MultiClient");
+        } catch (IOException en) {
+            //setActiveScreen(new MenuScreen());
+            System.out.println("Exception: IOException in MultiClient");
+            back = true;
+            //setActiveScreen(new MenuScreen());
 
-            }
+        }
 
-            Kryo kryo = client.getKryo();
-            kryo.register(SomeRequest.class);
-            kryo.register(SomeResponse.class);
-            kryo.register(PaddleDirection.class);
-            kryo.register(BallPosition.class);
-            kryo.register(FlagStatus.class);
-            kryo.register(ScoreBoard.class);
-            kryo.register(PaddlePosition.class);
-            kryo.register(StartLable.class);
+        Kryo kryo = client.getKryo();
+        kryo.register(SomeRequest.class);
+        kryo.register(SomeResponse.class);
+        kryo.register(PaddleDirection.class);
+        kryo.register(BallPosition.class);
+        kryo.register(FlagStatus.class);
+        kryo.register(ScoreBoard.class);
+        kryo.register(PaddlePosition.class);
+        kryo.register(StartLable.class);
 
 
-            // Reaching basic connectivity with the server
-            request = new SomeRequest();
-            request.text = "INIT";
-            client.sendTCP(request);
-            request.text = "NICK" + nick;
-            client.sendTCP(request);
-            request.text = gameLanguage;
+        // Reaching basic connectivity with the server
+        request = new SomeRequest();
+        request.text = "INIT";
+        client.sendTCP(request);
+        request.text = "NICK" + nick;
+        client.sendTCP(request);
+        request.text = gameLanguage;
 
-            client.addListener(new Listener() {
-                public void received (Connection connection, Object object) {
-                    if (object instanceof SomeResponse) {
-                        SomeResponse response = (SomeResponse)object;
-                        System.out.println(response.text);
-                        if(response.text.equals("CONNECT")) {
+        client.addListener(new Listener() {
+            public void received(Connection connection, Object object) {
+                if (object instanceof SomeResponse) {
+                    SomeResponse response = (SomeResponse) object;
+                    System.out.println(response.text);
+                    switch (response.text) {
+                        case "CONNECT":
                             waiting.setVisible(false);
                             readyClient.setVisible(true);
                             readyServer.setVisible(true);
-                        }
-                        else if(response.text.equals("READY")){
+                            break;
+                        case "READY":
                             readyServer.setText(ready2);
                             isServerReady = true;
-                            if (isClientReady){
+                            if (isClientReady) {
                                 flag = 0;
                             }
-                        }
-                        else if(response.text.equals("YOU SERVE")){
+                            break;
+                        case "YOU SERVE":
                             startLable.isVisibile = true;
                             isClientServe = true;
-                        }
-
-                        else if(response.text.equals("CLOSE")){
+                            break;
+                        case "CLOSE":
                             client.close();
                             back = true;
-                            //PongGameBeta.setActiveScreen(new MenuScreen());
-                        }
-                    }
-                    if (object instanceof PaddleDirection) {
-                        PaddleDirection direction = (PaddleDirection) object;
-                        paddle1.accelerateWithoutRotation(direction.y);
-                    }
-                    if  (object instanceof BallPosition) {
-                        BallPosition ballPosition = (BallPosition) object;
-                        ball.setPosition(ballPosition.x,ballPosition.y);
-                    }
-                    if  (object instanceof FlagStatus) {
-                        FlagStatus flagStatus = (FlagStatus) object;
-                        flag = flagStatus.flag;
-                        if(flagStatus.flag == 1){
-                            spaceLabel.setText("");
-                            readyClient.setText("");
-                            readyServer.setText("");
-                        }
-                        if(flagStatus.flag == 2){
-                            upDateStartLabel();
-                        }
-                    }
-                    if  (object instanceof  ScoreBoard) {
-                        ScoreBoard scoreBoard = (ScoreBoard) object;
-                        score = scoreBoard.scoreBoard;
-                        upDateScoreBoard();
-                    }
-                    if  (object instanceof  StartLable) {
-                        StartLable startLable = (StartLable) object;
-                        isVisible = startLable.isVisibile;
-
+                            break;
                     }
                 }
-            });
+                if (object instanceof PaddleDirection) {
+                    PaddleDirection direction = (PaddleDirection) object;
+                    paddle1.accelerateWithoutRotation(direction.y);
+                }
+                if (object instanceof BallPosition) {
+                    BallPosition ballPosition = (BallPosition) object;
+                    ball.setPosition(ballPosition.x, ballPosition.y);
+                }
+                if (object instanceof FlagStatus) {
+                    FlagStatus flagStatus = (FlagStatus) object;
+                    flag = flagStatus.flag;
+                    if (flagStatus.flag == 1) {
+                        spaceLabel.setText("");
+                        readyClient.setText("");
+                        readyServer.setText("");
+                    }
+                    if (flagStatus.flag == 2) {
+                        upDateStartLabel();
+                    }
+                }
+                if (object instanceof ScoreBoard) {
+                    ScoreBoard scoreBoard = (ScoreBoard) object;
+                    score = scoreBoard.scoreBoard;
+                    upDateScoreBoard();
+                }
+                if (object instanceof StartLable) {
+                    StartLable startLable = (StartLable) object;
+                    isVisible = startLable.isVisibile;
 
-            showScoreboard();
-            showStartLabel();
+                }
+            }
+        });
+
+        showScoreboard();
+        showStartLabel();
 
     }
+
     @Override
     public void update(float dt) {
-        if(back){
+        if (back) {
             client.close();
             PongGameBeta.setActiveScreen(new MenuScreen());
         }
 
-        if(flag == -1 && isClientReady){
+        if (flag == -1 && isClientReady) {
             readyClient.setText(ready2);
         }
-        if(flag == -1 && isServerReady) {
+        if (flag == -1 && isServerReady) {
             readyServer.setText(ready2);
         }
-        if(isServerReady && isClientReady){
+        if (isServerReady && isClientReady) {
             readyServer.setText("");
             readyClient.setText("");
             upDateStartLabel();
         }
 
         direction = new PaddleDirection();
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)){
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 
             direction.y = 1;
             client.sendTCP(direction);
-        }
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 
             direction.y = -1;
             client.sendTCP(direction);
-        }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && !isReadySend) {
+        } else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && flag == -1 && !isReadySend) {
             readyClient.setText(ready2);
             request.text = "READY";
             client.sendTCP(request);
             isReadySend = true;
             isClientReady = true;
 
-        }
-        else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && isClientServe && (flag == 0 || flag == 2 || flag == 9 )){
+        } else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && isClientServe && (flag == 0 || flag == 2 || flag == 9)) {
             readyClient.setText("");
             spaceLabel.setText("");
             readyServer.setText("");
@@ -278,14 +270,12 @@ public class MultiScreenClient extends BaseScreen {
         }
 
 
-
         // return to menu, ending the game.
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
-        {
-            request.text="EXIT";
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            request.text = "EXIT";
             client.sendTCP(request);
             client.close();
-            setActiveScreen( new MenuScreen());
+            setActiveScreen(new MenuScreen());
 
 
         }
@@ -298,57 +288,66 @@ public class MultiScreenClient extends BaseScreen {
     public static class SomeRequest {
         public String text;
     }
+
     public static class SomeResponse {
         public String text;
     }
+
     public static class BallPosition {
-        public float x,y;
+        public float x, y;
     }
+
     public static class PaddleDirection {
         public int y;
     }
+
     public static class FlagStatus {
         public int flag;
     }
-    public static class ScoreBoard{
+
+    public static class ScoreBoard {
         public String scoreBoard;
     }
+
     public static class PaddlePosition {
         public float y;
     }
-    public static class StartLable{
+
+    public static class StartLable {
         public boolean isVisibile;
     }
 
-    public void setTcpPort(int tcpPort){
+    public void setTcpPort(int tcpPort) {
         this.tcpPort = tcpPort;
     }
-    public void setUdpPort(int udpPort){
+
+    public void setUdpPort(int udpPort) {
         this.udpPort = udpPort;
     }
-    public void setIpHost(String ipHost){
+
+    public void setIpHost(String ipHost) {
         this.ipHost = ipHost;
     }
 
     public void showStartLabel() {
         if (gameLanguage.equals("PL")) {
-            spaceLabel = new Label(" NACISNIJ SPACJE ABY ZACZAC ", BaseGame.labelStyle);
+            spaceLabel = new Label(" NACISNIJ SPACJE ABY ZACZAC ", DefaultGame.labelStyle);
         } else {
-            spaceLabel = new Label(" PRESS  SPACE  TO  START  ", BaseGame.labelStyle);
+            spaceLabel = new Label(" PRESS  SPACE  TO  START  ", DefaultGame.labelStyle);
         }
-        spaceLabel.setPosition(((mainStage.getWidth() / 4)*3) - 200, mainStage.getHeight() / 2);
+        spaceLabel.setPosition(((mainStage.getWidth() / 4) * 3) - 200, mainStage.getHeight() / 2);
         spaceLabel.setVisible(false);
 
         uiStage.addActor(spaceLabel);
     }
 
     public void showScoreboard() {
-        scoreLabel = new Label("", BaseGame.labelStyle);
-        scoreLabel.setPosition((mainStage.getWidth()/2) - 240, mainStage.getHeight() - 50 );
+        scoreLabel = new Label("", DefaultGame.labelStyle);
+        scoreLabel.setPosition((mainStage.getWidth() / 2) - 240, mainStage.getHeight() - 50);
 
         scoreLabel.setText("                    " +
                 paddle1.getPlayer().getScore().getPoints() +
-                " / "+ PongGameBeta.points + "        " +
+                " / " + PongGameBeta.points + "        " +
                 paddle1.getPlayer().getScore().getSets() +
                 "   " +
                 "(" + PongGameBeta.sets + ")" +
@@ -360,69 +359,54 @@ public class MultiScreenClient extends BaseScreen {
         uiStage.addActor(scoreLabel);
 
     }
-    public void upDateScoreBoard(){
+
+    public void upDateScoreBoard() {
         scoreLabel.setText(score);
     }
 
 
-    public void upDateStartLabel()
-    {
+    public void upDateStartLabel() {
         spaceLabel.setVisible(true);
-        if(gameLanguage.equals("PL"))
-        {
-            if(flag == 0 && isClientServe)
-            {
+        if (gameLanguage.equals("PL")) {
+            if (flag == 0 && isClientServe) {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if (flag == 2 && !isClientServe)
-            {
+            } else if (flag == 2 && !isClientServe) {
                 spaceLabel.setText(" PUNKT SETOWY! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if (flag == 2 && isClientServe)
-            {
+            } else if (flag == 2) {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC - PUNKT SETOWY!  ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 9 && !isClientServe)
-            {
+            } else if (flag == 9 && !isClientServe) {
                 spaceLabel.setText(" PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 9 && isClientServe)
-            {
+            } else if (flag == 9) {
                 spaceLabel.setText(" NACISNIJ SPACJE ABY ZACZAC - PUNKT MECZOWY !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 99 && !isClientServe)
-            {
+            } else if (flag == 99 && !isClientServe) {
                 spaceLabel.setText(" KONIEC GRY - WYGRALES");
                 readyServer.setText("");
                 readyClient.setText("");
-            }
-            else if( flag == 99 && isClientServe)
-            {
+            } else if (flag == 99) {
                 spaceLabel.setText(" KONIEC GRY - PRZEGRALES");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-        }
-        else if(gameLanguage.equals("EN") ) {
+        } else if (gameLanguage.equals("EN")) {
             if (flag == 0 && isClientServe) {
                 spaceLabel.setText(" PRESS  SPACE  TO  START  ");
                 readyServer.setText("");
                 readyClient.setText("");
-            } else if (flag == 2 && isClientServe == false) {
+            } else if (flag == 2 && !isClientServe) {
                 spaceLabel.setText(" SET POINT! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            } else if (flag == 2 && isClientServe) {
+            } else if (flag == 2) {
                 spaceLabel.setText(" PRESS  SPACE  TO  START - SET POINT");
                 readyServer.setText("");
                 readyClient.setText("");
@@ -430,7 +414,7 @@ public class MultiScreenClient extends BaseScreen {
                 spaceLabel.setText(" MATCH POINT !!! ");
                 readyServer.setText("");
                 readyClient.setText("");
-            } else if (flag == 9 && isClientServe) {
+            } else if (flag == 9) {
                 spaceLabel.setText(" PRESS  SPACE  TO  START - MATCH POINT !!!  ");
                 readyServer.setText("");
                 readyClient.setText("");
@@ -438,13 +422,12 @@ public class MultiScreenClient extends BaseScreen {
                 spaceLabel.setText(" END GAME - YOU WIN");
                 readyServer.setText("");
                 readyClient.setText("");
-            } else if (flag == 99 && isClientServe) {
+            } else if (flag == 99) {
                 spaceLabel.setText(" END GAME - YOU LOST");
                 readyServer.setText("");
                 readyClient.setText("");
             }
-        }
-        else if(!isClientServe){
+        } else if (!isClientServe) {
             spaceLabel.setText("");
         }
     }

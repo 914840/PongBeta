@@ -1,34 +1,33 @@
 package game.pong.beta.components;
 
 
-
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import game.pong.beta.baseGame.BaseActor;
-import game.pong.beta.baseGame.BaseGame;
-import game.pong.beta.baseGame.BaseScreen;
+import game.pong.beta.baseGame.DefaultActor;
+import game.pong.beta.baseGame.DefaultGame;
+import game.pong.beta.baseGame.DefaultScreen;
 import game.pong.beta.baseGame.PongGameBeta;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author: Maciej Tymorek
- * @Project: Pong
+ * @author Paweł Kumanowski
  * Class which sets up the Multi-player Lobby Screen
  */
 
-public class LobbyScreen extends BaseScreen {
+public class LobbyScreen extends DefaultScreen {
 
-    private BaseActor background;
-    private BaseActor title;
+    private DefaultActor background;
+    private DefaultActor title;
 
     protected Table uiTable;
 
@@ -55,25 +54,22 @@ public class LobbyScreen extends BaseScreen {
         uiTable = new Table();
         uiTable.setFillParent(true);
 
-        if(PongGameBeta.gameLanguage.equals("PL"))
-        {
-            joinButton = new TextButton("    Dolacz    ", BaseGame.textButtonStyle);
-            createButton = new TextButton("    Stworz    ", BaseGame.textButtonStyle);
-            backButton = new TextButton(" Wstecz ", BaseGame.textButtonStyle );
-            ip = new Label("Adres IP:", BaseGame.labelStyle);
-            waiting = new Label( " OCZEKIWANIE NA GRACZA ", BaseGame.labelStyle);
-        }
-        else
-        {
-            joinButton = new TextButton("     Join     ", BaseGame.textButtonStyle);
-            createButton = new TextButton("    Create    ", BaseGame.textButtonStyle);
-            backButton = new TextButton("  Back  ", BaseGame.textButtonStyle );
-            ip = new Label("IP adress: ", BaseGame.labelStyle);
-            waiting = new Label(" WAITING FOR THE PLAYER ", BaseGame.labelStyle);
+        if (PongGameBeta.gameLanguage.equals("PL")) {
+            joinButton = new TextButton("    Dolacz    ", DefaultGame.textButtonStyle);
+            createButton = new TextButton("    Stworz    ", DefaultGame.textButtonStyle);
+            backButton = new TextButton(" Wstecz ", DefaultGame.textButtonStyle);
+            ip = new Label("Adres IP:", DefaultGame.labelStyle);
+            waiting = new Label(" OCZEKIWANIE NA GRACZA ", DefaultGame.labelStyle);
+        } else {
+            joinButton = new TextButton("     Join     ", DefaultGame.textButtonStyle);
+            createButton = new TextButton("    Create    ", DefaultGame.textButtonStyle);
+            backButton = new TextButton("  Back  ", DefaultGame.textButtonStyle);
+            ip = new Label("IP adress: ", DefaultGame.labelStyle);
+            waiting = new Label(" WAITING FOR THE PLAYER ", DefaultGame.labelStyle);
         }
 
-        String command = null;
-        if(System.getProperty("os.name").equals("Mac OS X"))
+        String command;
+        if (System.getProperty("os.name").equals("Mac OS X"))
             command = "ifconfig";
         else
             command = "ipconfig";
@@ -84,10 +80,10 @@ public class LobbyScreen extends BaseScreen {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Scanner s = new Scanner(p.getInputStream());
+        Scanner s = new Scanner(Objects.requireNonNull(p).getInputStream());
 
-        StringBuilder sb = new StringBuilder("");
-        while(s.hasNext())
+        StringBuilder sb = new StringBuilder();
+        while (s.hasNext())
             sb.append(s.next());
         String ipconfig = sb.toString();
         Pattern pt = Pattern.compile("192\\.168\\.[0-9]{1,3}\\.[0-9]{1,3}");
@@ -101,9 +97,9 @@ public class LobbyScreen extends BaseScreen {
 //            e.printStackTrace();
 //        }
 
-        ipAdress = new TextField(ipS ,BaseGame.textFieldStyle);
-        nick = new Label("Nick: ", BaseGame.labelStyle);
-        nickText = new TextField(PongGameBeta.nick, BaseGame.textFieldStyle);
+        ipAdress = new TextField(ipS, DefaultGame.textFieldStyle);
+        nick = new Label("Nick: ", DefaultGame.labelStyle);
+        nickText = new TextField(PongGameBeta.nick, DefaultGame.textFieldStyle);
 
 
         //uiTable.pad(6);
@@ -126,10 +122,10 @@ public class LobbyScreen extends BaseScreen {
         AtomicBoolean flagActiveNickText = new AtomicBoolean(true);
         nickText.addListener(
                 e -> {
-                    if(!(e instanceof InputEvent) ||
-                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                    if (!(e instanceof InputEvent) ||
+                            !((InputEvent) e).getType().equals(InputEvent.Type.touchDown))
                         return false;
-                    if(flagActiveNickText.get()) {
+                    if (flagActiveNickText.get()) {
                         nickText.setText("");
                     }
                     return true;
@@ -139,10 +135,10 @@ public class LobbyScreen extends BaseScreen {
         AtomicBoolean flagActiveIpAdress = new AtomicBoolean(true);
         ipAdress.addListener(
                 e -> {
-                    if(!(e instanceof InputEvent) ||
-                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                    if (!(e instanceof InputEvent) ||
+                            !((InputEvent) e).getType().equals(InputEvent.Type.touchDown))
                         return false;
-                    if(flagActiveIpAdress.get()) {
+                    if (flagActiveIpAdress.get()) {
                         ipAdress.setText("");
                     }
                     return true;
@@ -151,13 +147,13 @@ public class LobbyScreen extends BaseScreen {
 
         createButton.addListener(
                 e -> {
-                    if(!(e instanceof InputEvent) ||
-                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                    if (!(e instanceof InputEvent) ||
+                            !((InputEvent) e).getType().equals(InputEvent.Type.touchDown))
                         return false;
 
                     PongGameBeta.nick = nickText.getText();
 
-                    waiting.setPosition(mainStage.getWidth()/2 - 200, mainStage.getHeight()/2);
+                    waiting.setPosition(mainStage.getWidth() / 2 - 200, mainStage.getHeight() / 2);
                     ipAdress.setDisabled(true);
                     flagActiveIpAdress.set(false);
                     nickText.setDisabled(true);
@@ -174,8 +170,8 @@ public class LobbyScreen extends BaseScreen {
 
         joinButton.addListener(
                 e -> {
-                    if(!(e instanceof InputEvent) ||
-                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                    if (!(e instanceof InputEvent) ||
+                            !((InputEvent) e).getType().equals(InputEvent.Type.touchDown))
                         return false;
 
                     ipAdress.setDisabled(true);
@@ -192,15 +188,14 @@ public class LobbyScreen extends BaseScreen {
                     PongGameBeta.setActiveScreen(multiScreenClient);
 
 
-
                     return true;
                 }
         );
 
         backButton.addListener(
                 e -> {
-                    if(!(e instanceof InputEvent) ||
-                            !((InputEvent) e ).getType().equals(InputEvent.Type.touchDown) )
+                    if (!(e instanceof InputEvent) ||
+                            !((InputEvent) e).getType().equals(InputEvent.Type.touchDown))
                         return false;
 
                     PongGameBeta.nick = nickText.getText();
@@ -210,7 +205,6 @@ public class LobbyScreen extends BaseScreen {
         );
 
     }
-
 
 
     @Override

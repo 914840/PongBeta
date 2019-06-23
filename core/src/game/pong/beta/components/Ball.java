@@ -2,18 +2,21 @@ package game.pong.beta.components;
 
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import game.pong.beta.baseGame.BaseActor;
+import game.pong.beta.baseGame.DefaultActor;
 
 /**
- * @Author: Paweł Kumanowski
- * @Project: Pong
+ * @author Paweł Kumanowski
  * Class used for initializing Ball default settings as speed and texture.
  */
 
-public class Ball extends BaseActor {
+public class Ball extends DefaultActor {
 
-    private float speed;
-
+    /**
+     * Ball constructor
+     * @param x float
+     * @param y float
+     * @param s Stage object
+     */
     Ball(float x, float y, Stage s) {
         super(x, y, s);
         loadTexture("ball.png");
@@ -24,6 +27,10 @@ public class Ball extends BaseActor {
         setBoundaryPolygon(4);
     }
 
+    /**
+     * Method activating the Ball
+     * @param dt elapsed time (second) since last frame (supplied by Stage act method)
+     */
     @Override
     public void act(float dt) {
         super.act(dt);

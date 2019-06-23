@@ -203,10 +203,6 @@ public class LevelScreen extends DefaultScreen {
     }
 
 
-    public float getPlayerScore(Player player) {
-        return 0;
-    }
-
     public void showScoreboard() {
         scoreLabel = new Label(paddle1.getPlayer().getNick() +
                 "    " +
@@ -228,7 +224,9 @@ public class LevelScreen extends DefaultScreen {
     }
 
 
-    //TODO poprawić scoreboard jak w showScoreBoard - bez wyśfietlania nicków.
+    /**
+     * Method for updating Scoreboard
+     */
     public void upDateScoreboard() {
         scoreLabel.setText("                       " +
                 paddle1.getPlayer().getScore().getPoints() +

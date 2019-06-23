@@ -572,7 +572,10 @@ public class MultiScreenServer extends DefaultScreen {
         }
     }
 
-    //TODO zostawić
+    /**
+     * Method resetting Start location
+     * @param i integer
+     */
     public void resetStartLocationLevelScreen(int i) {
         paddle1.setPosition(30, (mainStage.getHeight() / 2) - 75);
         paddle2.setPosition((mainStage.getWidth() - 60), (mainStage.getHeight() / 2) - 75);

@@ -11,13 +11,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 
 public class GameTests {
-
+    /**
+     * Player test method
+     */
     @Test
     public void playerTest(){
         Player player = new Player("Aron");
         assertEquals(player.getNick(), "Aron");
     }
 
+    /**
+     * Score test method
+     */
     @Test
     public void scoreTest(){
         Score score = new Score(12, 12);

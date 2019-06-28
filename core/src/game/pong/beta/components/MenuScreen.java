@@ -29,7 +29,7 @@ public class MenuScreen extends DefaultScreen {
     @Override
     public void initialize() {
         background = setBackground();
-        title = setTitle("pong.png");
+        title = setTitle("Pong.png");
 
         setButtonStyleTexture("button.png");
 

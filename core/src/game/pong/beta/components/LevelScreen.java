@@ -96,6 +96,7 @@ public class LevelScreen extends DefaultScreen {
         } else if (flag == 5) {
             paddle1.getPlayer().getScore().setPoints(0);
             paddle2.getPlayer().getScore().setPoints(0);
+            flag = 0;
         } else if ((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (flag == 99)) {
             PongGameBeta.setActiveScreen(new MenuScreen());
         } else if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
